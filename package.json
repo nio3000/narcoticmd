@@ -7,7 +7,7 @@
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
-    "react-scripts": "1.0.1",
+    "react-scripts": "1.0.7",
     "react-test-renderer": "^15.5.4"
   },
   "scripts": {

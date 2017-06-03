@@ -14,7 +14,7 @@ exports[`Dealer renders correctly 1`] = `
   className="Dealer"
   style={
     Object {
-      "height": "60%",
+      "height": "70%",
       "margin": "auto",
       "width": "80%",
     }
