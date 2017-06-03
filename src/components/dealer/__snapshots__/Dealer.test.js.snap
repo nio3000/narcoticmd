@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dealer onChange 1`] = `
+<textarea
+  class="textarea"
+  style="border: 2px solid #999; height: 100%; width: 100%;"
+>
+  elo
+</textarea>
+`;
+
+exports[`Dealer renders correctly 1`] = `
+<div
+  className="Dealer"
+  style={
+    Object {
+      "height": "60%",
+      "margin": "auto",
+      "width": "80%",
+    }
+  }
+>
+  <textarea
+    className="textarea"
+    onChange={[Function]}
+    onSelect={[Function]}
+    style={
+      Object {
+        "border": "2px solid #999",
+        "height": "100%",
+        "width": "100%",
+      }
+    }
+    value=""
+  />
+</div>
+`;
