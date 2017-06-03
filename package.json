@@ -1,13 +1,12 @@
 {
   "name": "narcotic",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
-    "husky": "^0.13.4",
     "react-scripts": "1.0.1",
     "react-test-renderer": "^15.5.4"
   },
@@ -15,7 +14,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "precommit": "npm test"
+    "eject": "react-scripts eject"
   }
 }
