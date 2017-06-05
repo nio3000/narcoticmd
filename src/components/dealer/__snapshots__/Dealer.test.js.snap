@@ -20,6 +20,67 @@ exports[`Dealer renders correctly 1`] = `
     }
   }
 >
+  <div
+    className="Cocaine"
+    style={
+      Object {
+        "display": "block",
+      }
+    }
+  >
+    <form>
+      <p>
+        Format
+      </p>
+      <select>
+        <option
+          value="bold"
+        >
+          Bold
+        </option>
+        <option
+          value="italic"
+        >
+          Italic
+        </option>
+        <option
+          value="strike"
+        >
+          Strikethrough
+        </option>
+        <option
+          value="underline"
+        >
+          Underline
+        </option>
+      </select>
+      <p>
+        Headers
+      </p>
+      <select>
+        <option
+          value="h1"
+        >
+          H1
+        </option>
+        <option
+          value="h2"
+        >
+          H2
+        </option>
+        <option
+          value="h3"
+        >
+          H3
+        </option>
+        <option
+          value="h4"
+        >
+          H4
+        </option>
+      </select>
+    </form>
+  </div>
   <textarea
     className="textarea"
     onChange={[Function]}

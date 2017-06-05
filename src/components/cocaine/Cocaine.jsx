@@ -1,9 +1,9 @@
 import React from 'react';
+import './Cocaine.css';
 
 const Cocaine = ({visible = false }) => {
 
   return (
-
     <div className="Cocaine" style={(visible)? style.visible : style.hidden}>
       <form>
         <p>Format</p>

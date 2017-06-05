@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Cocaine from "../cocaine/Cocaine";
 
 
 export class Dealer extends Component {
@@ -29,6 +30,7 @@ export class Dealer extends Component {
   render() {
     return (
       <div className="Dealer" style={style.container}>
+        <Cocaine visible={true} />
         <textarea
           value={this.state.text}
           onChange={this.onTextChange}
