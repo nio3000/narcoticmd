@@ -4,11 +4,12 @@
 * Dealer component
 * Working Cocaine with basic formating options
 
-### 0.2.0
-* Add Police
-
-### 0.3.0 - Style
+### 0.2.0 - Style
 * On Dealer focus fade everything other.
+* [Add CSS Modules](https://medium.com/nulogy/how-to-use-css-modules-with-create-react-app-9e44bec2b5c2)
+
+### 0.3.0
+* Add Police
 
 ### 0.4.0
 * Add Call - double shift for call custom Cocaine without any selected text
