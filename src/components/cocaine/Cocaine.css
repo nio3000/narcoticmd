@@ -1,6 +1,46 @@
-.Cocaine {
-  background: #AAA;
-  padding: 20px;
+.cocaine {
+  background: #FF5216;
+  border: 1px solid #FF9E7C;
+  box-sizing: border-box;
+  color: #fff;
   position: absolute;
-  z-index: 10
+  width: 100px;
+  z-index: 10;
+
+  left: 600px;
+}
+
+.cocaine__inhaler {
+  background-color: transparent;
+  border: 0;
+  color: transparent;
+  height: 1px;
+  width: 1px;
+}
+.cocaine__inhaler:focus {
+  border: 0;
+  outline: none;
+}
+
+
+.cocaine__section {}
+.cocaine__section-header {
+  font-weight: 700;
+}
+.cocaine__section-options {}
+
+.cocaine__hidden-option {
+  display: none;
+}
+
+.cocaine__label {
+    display: inline-block;
+    padding: 5px;
+    text-align: left;    
+    width: 100%;
+}
+
+.cocaine__label:hover {
+    background:#FF9E7C;
+    cursor:pointer;
 }

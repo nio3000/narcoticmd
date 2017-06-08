@@ -1,29 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { RadioGroup, Radio } from 'react-radio-group';
 import './Cocaine.css';
 
-const Cocaine = ({visible = false }) => {
 
-  return (
-    <div className="Cocaine" style={(visible)? style.visible : style.hidden}>
-      <form>
-        <p>Format</p>
-        <select>
-          <option value="bold">Bold</option>
-          <option value="italic">Italic</option>
-          <option value="strike">Strikethrough</option>
-          <option value="underline">Underline</option>
-        </select>
-        <p>Headers</p>
-        <select>
-          <option value="h1">H1</option>
-          <option value="h2">H2</option>
-          <option value="h3">H3</option>
-          <option value="h4">H4</option>
-        </select>
-      </form>
-    </div>
-  );
-};
+class Cocaine extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedValue: null,
+      uses: this.props.portion,
+      key: ''
+    };
+
+    this.optionsHandleChange = this.optionsHandleChange.bind(this);
+    this.handleShortcut = this.handleShortcut.bind(this);
+
+  }
+
+  optionsHandleChange(value) {
+    this.setState({ selectedValue: value });
+  }
+
+  handleShortcut( event ) {
+    let key = event.target.value.toLocaleLowerCase();
+
+    this.setState({
+      uses: this.props.portion.find((item) => item.key === key)
+  });
+
+  }
+
+  render() {
+    let options = <label className="cocaine__hidden-option"><Radio/></label>;
+    if(this.state.uses && this.state.uses.options) {
+      options = this.state.uses.options.map(item =>
+        <label
+          key={item.key}
+          className="cocaine__label"
+        ><Radio value={item.key}/>{item.name}</label>
+      );
+    }
+    return (
+      <div className="cocaine">
+        <form>
+          <input type="text" onChange={this.handleShortcut} onKeyDown={this.resetKey} className="cocaine__inhaler" autoFocus value={this.state.key}/>
+          <section className="cocaine__section">
+            <p className="cocaine__section-header">[E]mphasis</p>
+          </section>
+          <section className="cocaine__section">
+            <p className="cocaine__section-header">[H]eaders</p>
+          </section>
+          <section className="cocaine__section">
+          <RadioGroup
+            name="headers"
+            selectedValue={this.setState.selectedValue}
+            onChange={this.optionsHandleChange}
+            className="cocaine__section-options">
+            {options}
+          </RadioGroup>
+          </section>
+        </form>
+      </div>
+    );
+  }
+}
+
+
 
 export let style = {
   visible: {
@@ -31,6 +74,9 @@ export let style = {
   },
   hidden: {
     display: 'none'
+  },
+  checked: {
+    background: "FF9E7C"
   }
 };
 
