@@ -1,7 +1,7 @@
 //esversion: 6
 import React, { Component } from 'react';
 import './App.css';
-import Editor from "./components/dealer/Dealer";
+import Druggy from "./components/druggy/Druggy";
 import Logo from "./components/logo/Logo";
 
 
@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <div className="App">
         <Logo />
-        <Editor />
+        <Druggy />
       </div>
     );
   }

@@ -23,7 +23,7 @@ const portion = [
   }
 ];
 
-export class Dealer extends Component {
+export class Druggy extends Component {
   constructor( props ) {
     super(props);
 
@@ -113,4 +113,4 @@ export const style = {
 };
 
 
-export default Dealer;
+export default Druggy;

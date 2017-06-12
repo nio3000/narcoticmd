@@ -1,14 +1,14 @@
 import React from 'react';
 import TestUtils from 'react-dom/test-utils'
-import Dealer from './Dealer';
+import Druggy from './Druggy';
 
 import renderer from 'react-test-renderer';
 
-describe('Dealer', () => {
+describe('Druggy', () => {
 
   test('renders correctly', () => {
     const component = renderer.create(
-      <Dealer />
+      <Druggy />
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
@@ -16,7 +16,7 @@ describe('Dealer', () => {
 
   //TODO replace snaphosts with Enzyme unit testing
   test('onChange', () =>{
-    const dealer = TestUtils.renderIntoDocument(<Dealer/>);
+    const dealer = TestUtils.renderIntoDocument(<Druggy/>);
     const textarea = TestUtils.findRenderedDOMComponentWithTag(dealer, 'textarea');
     textarea.value = 'elo';
     TestUtils.Simulate.change(textarea);
