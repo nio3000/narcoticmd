@@ -13,6 +13,7 @@
 
 ### 0.4.0
 * Add Call - double shift for call custom Cocaine without any selected text
+* Save text in Dealer into browser local storage
 
 ## 1.0.0 - Working editor with preview
 

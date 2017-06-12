@@ -9,7 +9,7 @@ class Cocaine extends Component {
     super(props);
     this.state = {
       selectedValue: null,
-      uses: this.props.portion,
+      choosenPortion: null,
       key: ''
     };
 
@@ -22,23 +22,40 @@ class Cocaine extends Component {
     this.setState({ selectedValue: value });
   }
 
-  handleShortcut( event ) {
+  handleShortcut(event) {
     let key = event.target.value.toLocaleLowerCase();
+    if (!this.state.choosenPortion) {
+      this.setState({
+        choosenPortion: this.props.portion.find((item) => item.key === key)
+      });
 
-    this.setState({
-      uses: this.props.portion.find((item) => item.key === key)
-  });
 
+    } else {
+      console.log('now we choose format for key: ' + key);
+      let option = this.state.choosenPortion.options.find((item) => item.key === key);
+      if(!option) {
+        this.props.onChooseFormat(null);
+        return;
+      }
+      console.log(option);
+      console.log('Formatting: ' + option.format);
+      this.props.onChooseFormat(option.format);
+      this.setState({
+        key
+      })
+    }
   }
 
   render() {
     let options = <label className="cocaine__hidden-option"><Radio/></label>;
-    if(this.state.uses && this.state.uses.options) {
-      options = this.state.uses.options.map(item =>
+    if(this.state.choosenPortion && this.state.choosenPortion.options) {
+      options = this.state.choosenPortion.options.map(item =>
         <label
           key={item.key}
           className="cocaine__label"
-        ><Radio value={item.key}/>{item.name}</label>
+        >
+          <Radio value={item.key}/>{item.name}
+        </label>
       );
     }
     return (

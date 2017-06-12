@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Cocaine from "../cocaine/Cocaine";
 
-
 const portion = [
   {
     name: 'header',
@@ -31,11 +30,13 @@ export class Dealer extends Component {
     this.state = {
       text: '',
       selectedText: [],
-      showCocaine: true
+      showCocaine: false
     };
 
+    this.handleKeyUp = this.handleKeyUp.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
     this.onSelectText = this.onSelectText.bind(this);
+    this.handleChooseFormat = this.handleChooseFormat.bind(this);
   }
 
   onSelectText( event ) {
@@ -43,40 +44,55 @@ export class Dealer extends Component {
     let selectionEnd = event.target.selectionEnd;
 
     if(selectionStart !== selectionEnd) {
-      // console.log(`${selectionStart} >><< ${selectionEnd}`);
-      this.setState({ 
-        showCocaine: true,
-        selectedText: [selectionStart, selectionEnd] 
+      this.setState({
+        selectedText: [selectionStart, selectionEnd]
       });
     }else{
       this.setState({
+        selectedText: [],
         showCocaine: false,
-        selectedText: []
       });
     }
-    // console.log(this.state.selectedText);
+  }
+
+  handleKeyUp( event ) {
+    //Assume that selection is done if user release the shift key
+    if(event.keyCode === 16 && this.state.selectedText.length > 0) {
+      this.setState({
+        showCocaine: true
+      })
+    }
   }
 
   onTextChange( event ) {
     this.setState({text: event.target.value})
   }
 
+  handleChooseFormat( format ) {
+    console.log(format);
+    this.setState({showCocaine: false});
+  }
 
+  componentDidUpdate(prevProps, prevState) {
+
+  }
 
   render() {
     let cocaine = null;
     if(this.state.showCocaine) {
-      cocaine = <Cocaine visible={this.state.showCocaine} portion={portion} />
+      cocaine = <Cocaine visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} />
     }
     return (
       <div className="Dealer" style={style.container}>
         {cocaine}
         <textarea
           value={this.state.text}
+          onKeyUp={this.handleKeyUp}
           onChange={this.onTextChange}
           onSelect={this.onSelectText}
           className="textarea"
           style={style.textarea}
+          autoFocus
         />
       </div>
     );
