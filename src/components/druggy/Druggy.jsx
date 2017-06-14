@@ -61,6 +61,7 @@ export class Druggy extends Component {
     this.onTextChange = this.onTextChange.bind(this);
     this.onSelectText = this.onSelectText.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
+    this.focus = this.focus.bind(this);
   }
 
   onSelectText( event ) {
@@ -99,13 +100,12 @@ export class Druggy extends Component {
       showCocaine: false,
       text: this.state.text.replace(selectedText, formattedSelection)
     });
+    this.focus();
   }
 
-  componentWillUpdate() {
-    // this.setState({selectedText: })
-  }
-  componentDidUpdate(prevProps, prevState) {
-
+  focus() {
+    this.textArea.focus();
+    this.textArea.selectionStart = this.textArea.selectionEnd;
   }
 
   render() {
@@ -123,7 +123,8 @@ export class Druggy extends Component {
           onSelect={this.onSelectText}
           className="textarea"
           style={style.textarea}
-          autoFocus={true}
+          autoFocus
+          ref={(textarea) => { this.textArea = textarea;}}
         />
       </div>
     );
