@@ -31,15 +31,12 @@ class Cocaine extends Component {
 
 
     } else {
-      console.log('now we choose format for key: ' + key);
       let option = this.state.choosenPortion.options.find((item) => item.key === key);
       if(!option) {
         this.props.onChooseFormat(null);
         return;
       }
-      console.log(option);
-      console.log('Formatting: ' + option.format);
-      this.props.onChooseFormat(option.format);
+      this.props.onChooseFormat( option.format );
       this.setState({
         key
       })
@@ -62,12 +59,12 @@ class Cocaine extends Component {
       <div className="cocaine">
         <form>
           <input type="text" onChange={this.handleShortcut} onKeyDown={this.resetKey} className="cocaine__inhaler" autoFocus value={this.state.key}/>
-          <section className="cocaine__section">
-            <p className="cocaine__section-header">[E]mphasis</p>
-          </section>
-          <section className="cocaine__section">
-            <p className="cocaine__section-header">[H]eaders</p>
-          </section>
+
+          {this.props.portion.map( item =>
+            <section className="cocaine__section" key={item.key}>
+              <p className="cocaine__section-header">{ item.name }</p>
+            </section>
+          )}
           <section className="cocaine__section">
           <RadioGroup
             name="headers"

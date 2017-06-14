@@ -6,22 +6,46 @@ const portion = [
     name: 'header',
     key: 'h',
     options: [
-      { key: '1', name: 'h1', format: '#'},
-      { key: '2', name: 'h2',  format: '##'},
-      { key: '3', name: 'h3',  format: '###'},
-      { key: '4', name: 'h4',  format: '####'}
+      { key: '1', name: 'h1', format: '#{STR}'},
+      { key: '2', name: 'h2', format: '##{STR}'},
+      { key: '3', name: 'h3', format: '###{STR}'},
+      { key: '4', name: 'h4', format: '####{STR}'}
     ]
   },
   {
     name: 'emphasis',
     key: 'e',
     options: [
-      {key: 'b', name: 'b',  format: "__"},
-      {key: 'i', name: 'i',  format: "_"},
-      {key: 's', name: 's',  format: '~~'}
+      {key: 'b', name: 'b', format: '__{STR}__'},
+      {key: 'i', name: 'i', format: '_{STR}_'},
+      {key: 's', name: 's', format: '~~{STR}~~'}
+    ]
+  },
+  {
+    name: 'blockquotes',
+    key: 'q',
+    options: [
+      { name: 'quotation', key: 'q', format: '> {STR}' }
+    ]
+  },
+  {
+    name: 'list',
+    key: 'l',
+    options: [
+      { name: 'ordered', key: 'o', format: '1. {STR}' },
+      { name: 'unordered', key: 'u', format: '* {STR}' },
     ]
   }
 ];
+//TODO
+// Links                               | U
+// Images                              | I
+// Code and Syntax Highlighting        | C
+// Tables                              | T
+// Inline HTML                         | ???
+//   Horizontal Rule                     | R
+//   Line Breaks
+// YouTube Videos
 
 export class Druggy extends Component {
   constructor( props ) {
@@ -69,10 +93,17 @@ export class Druggy extends Component {
   }
 
   handleChooseFormat( format ) {
-    console.log(format);
-    this.setState({showCocaine: false});
+    let selectedText = this.state.text.slice( this.state.selectedText[0], this.state.selectedText[1])
+    let formattedSelection = format.replace('{STR}', selectedText);
+    this.setState({
+      showCocaine: false,
+      text: this.state.text.replace(selectedText, formattedSelection)
+    });
   }
 
+  componentWillUpdate() {
+    // this.setState({selectedText: })
+  }
   componentDidUpdate(prevProps, prevState) {
 
   }
@@ -92,7 +123,7 @@ export class Druggy extends Component {
           onSelect={this.onSelectText}
           className="textarea"
           style={style.textarea}
-          autoFocus
+          autoFocus={true}
         />
       </div>
     );

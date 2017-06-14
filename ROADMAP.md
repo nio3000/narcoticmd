@@ -1,8 +1,8 @@
 #Release plan
 ## Init
 ### 0.1.0  - MVP 
-* Dealer component
-* Working Cocaine with basic formating options
+* Druggy component
+* Working Cocaine with basic formatting options
 
 ### 0.2.0 - Style
 * On Dealer focus fade everything other.
