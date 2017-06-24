@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
 import Cocaine from "../cocaine/Cocaine";
+// import brace from 'brace';
+import AceEditor from 'react-ace';
+
+
+import 'brace/mode/markdown';
+import 'brace/theme/github';
+
 
 const portion = [
   {
@@ -52,21 +59,34 @@ export class Druggy extends Component {
     super(props);
 
     this.state = {
-      text: '',
-      selectedText: [],
-      showCocaine: false
+      showCocaine: false,
+
+      value: "",
+      theme: 'github',
+      mode: 'markdown',
+      enableBasicAutocompletion: false,
+      enableLiveAutocompletion: false,
+      fontSize: 18,
+      showGutter: true,
+      showPrintMargin: true,
+      highlightActiveLine: true,
+      enableSnippets: false,
+      showLineNumbers: false,
     };
 
-    this.handleKeyUp = this.handleKeyUp.bind(this);
+    // this.handleKeyUp = this.handleKeyUp.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
     this.onSelectText = this.onSelectText.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
     this.focus = this.focus.bind(this);
   }
 
-  onSelectText( event ) {
-    let selectionStart = event.target.selectionStart;
-    let selectionEnd = event.target.selectionEnd;
+  onSelectText( newValue, event ) {
+    console.log('select-change', newValue);
+    // console.log('select-change-event', event);
+    /*
+    let selectionStart = event.ranges[0];
+    let selectionEnd = event.ranges[0];
 
     if(selectionStart !== selectionEnd) {
       this.setState({
@@ -77,7 +97,15 @@ export class Druggy extends Component {
         selectedText: [],
         showCocaine: false,
       });
-    }
+    }*/
+    // const content = this.refs.aceEditor.editor.session.getTextRange(selection.getRange());
+    console.log('aceEditor', this.aceEditor.editor.session.getTextRange(newValue.getRange()));
+
+  }
+
+  onTextChange( value ) {
+    // this.setState({text: event.target.value})
+    // console.log('change', value);
   }
 
   handleKeyUp( event ) {
@@ -89,9 +117,7 @@ export class Druggy extends Component {
     }
   }
 
-  onTextChange( event ) {
-    this.setState({text: event.target.value})
-  }
+
 
   handleChooseFormat( format ) {
     let selectedText = this.state.text.slice( this.state.selectedText[0], this.state.selectedText[1])
@@ -114,22 +140,31 @@ export class Druggy extends Component {
       cocaine = <Cocaine visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} />
     }
     return (
-      <div className="Dealer" style={style.container}>
+      <div className="Druggy" style={style.container}>
         {cocaine}
-        <textarea
-          value={this.state.text}
-          onKeyUp={this.handleKeyUp}
+        <AceEditor
+          value={this.state.value}
+          mode={this.state.mode}
+          theme={this.state.theme}
+          name="druggy"
           onChange={this.onTextChange}
-          onSelect={this.onSelectText}
-          className="textarea"
-          style={style.textarea}
-          autoFocus
-          ref={(textarea) => { this.textArea = textarea;}}
+          onSelectionChange={this.onSelectText}
+          fontSize={this.state.fontSize}
+          height="100%"
+          width="100%"
+          ref={( editor ) => this.aceEditor = editor}
+          setOptions={{
+            enableBasicAutocompletion: this.state.enableBasicAutocompletion,
+            enableLiveAutocompletion: this.state.enableLiveAutocompletion,
+            enableSnippets: this.state.enableSnippets,
+            showLineNumbers: this.state.showLineNumbers,
+            tabSize: 2,
+          }}
         />
       </div>
     );
   }
-};
+}
 
 export const style = {
   container: {
