@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import Cocaine from "../cocaine/Cocaine";
-// import brace from 'brace';
-import AceEditor from 'react-ace';
+import Ace from '../Ace';
 
 
-import 'brace/mode/markdown';
-import 'brace/theme/github';
 
 
 const portion = [
@@ -60,52 +57,11 @@ export class Druggy extends Component {
 
     this.state = {
       showCocaine: false,
-
-      value: "",
-      theme: 'github',
-      mode: 'markdown',
-      enableBasicAutocompletion: false,
-      enableLiveAutocompletion: false,
-      fontSize: 18,
-      showGutter: true,
-      showPrintMargin: true,
-      highlightActiveLine: true,
-      enableSnippets: false,
-      showLineNumbers: false,
     };
 
     // this.handleKeyUp = this.handleKeyUp.bind(this);
-    this.onTextChange = this.onTextChange.bind(this);
-    this.onSelectText = this.onSelectText.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
     this.focus = this.focus.bind(this);
-  }
-
-  onSelectText( newValue, event ) {
-    console.log('select-change', newValue);
-    // console.log('select-change-event', event);
-    /*
-    let selectionStart = event.ranges[0];
-    let selectionEnd = event.ranges[0];
-
-    if(selectionStart !== selectionEnd) {
-      this.setState({
-        selectedText: [selectionStart, selectionEnd]
-      });
-    }else{
-      this.setState({
-        selectedText: [],
-        showCocaine: false,
-      });
-    }*/
-    // const content = this.refs.aceEditor.editor.session.getTextRange(selection.getRange());
-    console.log('aceEditor', this.aceEditor.editor.session.getTextRange(newValue.getRange()));
-
-  }
-
-  onTextChange( value ) {
-    // this.setState({text: event.target.value})
-    // console.log('change', value);
   }
 
   handleKeyUp( event ) {
@@ -142,25 +98,7 @@ export class Druggy extends Component {
     return (
       <div className="Druggy" style={style.container}>
         {cocaine}
-        <AceEditor
-          value={this.state.value}
-          mode={this.state.mode}
-          theme={this.state.theme}
-          name="druggy"
-          onChange={this.onTextChange}
-          onSelectionChange={this.onSelectText}
-          fontSize={this.state.fontSize}
-          height="100%"
-          width="100%"
-          ref={( editor ) => this.aceEditor = editor}
-          setOptions={{
-            enableBasicAutocompletion: this.state.enableBasicAutocompletion,
-            enableLiveAutocompletion: this.state.enableLiveAutocompletion,
-            enableSnippets: this.state.enableSnippets,
-            showLineNumbers: this.state.showLineNumbers,
-            tabSize: 2,
-          }}
-        />
+        <Ace />
       </div>
     );
   }
