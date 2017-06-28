@@ -17,9 +17,9 @@ class Ace extends Component {
       enableBasicAutocompletion: false,
       enableLiveAutocompletion: false,
       fontSize: 18,
-      showGutter: true,
-      showPrintMargin: true,
-      highlightActiveLine: true,
+      showGutter: false,
+      showPrintMargin: false,
+      highlightActiveLine: false,
       enableSnippets: false,
       showLineNumbers: false,
     };
@@ -27,16 +27,17 @@ class Ace extends Component {
     this.onTextChange = this.onTextChange.bind(this);
     this.onSelectText = this.onSelectText.bind(this);
   }
-
-
+  componentDidMount() {
+    const textarea = this.aceEditor.editor.textInput.getElement();
+    textarea.classList.add(this.props.cssClass);
+  }
 
   onSelectText( newValue, event ) {
     // console.log('select-change: newValue', newValue);
     // console.log('select-change: event', event);
 
     // console.log('aceEditor', this.aceEditor.editor.session.getTextRange(newValue.getRange()));
-    // console.log('aceEditor', this.aceEditor.editor);
-
+    // console.log('aceEditor',     textarea.classList);
   }
 
   onTextChange( value ) {

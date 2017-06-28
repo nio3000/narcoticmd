@@ -1,8 +1,8 @@
 import React from 'react';
 import LogoImage from './img/logo.png';
-const Logo = ()  => {
+const Logo = ( alt="Nacotic logo" )  => {
   return(
-    <img src={LogoImage} />
+    <img src={LogoImage} alt={alt} />
   );
 };
 

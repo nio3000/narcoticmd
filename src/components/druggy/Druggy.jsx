@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import Cocaine from "../cocaine/Cocaine";
 import Ace from '../Ace';
-
-
+import Mousetrap from 'mousetrap';
 
 
 const portion = [
@@ -62,15 +61,25 @@ export class Druggy extends Component {
     // this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
     this.focus = this.focus.bind(this);
+    this.giveMeCocaine = this.giveMeCocaine.bind(this);
+
   }
 
-  handleKeyUp( event ) {
+  componentDidMount() {
+    Mousetrap.bind('shift', this.giveMeCocaine, 'keyup');
+  }
+  componentWillUnmount() {
+    Mousetrap.unbind('shift', this.giveMeCocaine, 'keyup')
+  }
+
+  giveMeCocaine() {
     //Assume that selection is done if user release the shift key
-    if(event.keyCode === 16 && this.state.selectedText.length > 0) {
-      this.setState({
-        showCocaine: true
-      })
-    }
+    // if(event.keyCode === 16 && this.state.selectedText.length > 0) {
+    console.log('Cocaine!!!', this);
+    this.setState({
+      showCocaine: true
+    })
+    // }
   }
 
 
@@ -98,7 +107,7 @@ export class Druggy extends Component {
     return (
       <div className="Druggy" style={style.container}>
         {cocaine}
-        <Ace />
+        <Ace cssClass="mousetrap"/>
       </div>
     );
   }
