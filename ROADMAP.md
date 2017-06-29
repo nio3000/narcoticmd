@@ -5,7 +5,7 @@
 * Working Cocaine with basic formatting options
 
 ### 0.2.0 - Style
-* On Dealer focus fade everything other.
+* On Druggy focus fade everything other.
 * [Add CSS Modules](https://medium.com/nulogy/how-to-use-css-modules-with-create-react-app-9e44bec2b5c2)
 
 ### 0.3.0

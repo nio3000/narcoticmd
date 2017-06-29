@@ -30,18 +30,28 @@ class Ace extends Component {
   componentDidMount() {
     const textarea = this.aceEditor.editor.textInput.getElement();
     textarea.classList.add(this.props.cssClass);
+
+    this.state.value = this.props.value;
+  }
+
+  componentWillReceiveProps( nextProps ) {
+    if(nextProps.value !== this.props.value) {
+      this.aceEditor.editor.session.replace( this.aceEditor.editor.selection.getRange(), nextProps.value);
+      this.aceEditor.editor.focus();
+    }
   }
 
   onSelectText( newValue, event ) {
-    // console.log('select-change: newValue', newValue);
-    // console.log('select-change: event', event);
-
-    // console.log('aceEditor', this.aceEditor.editor.session.getTextRange(newValue.getRange()));
-    // console.log('aceEditor',     textarea.classList);
+    let start = newValue.getRange().start;
+    let end = newValue.getRange().end;
+    let selectedText = this.aceEditor.editor.session.getTextRange(newValue.getRange());
+    this.props.onSelectText( start, end, selectedText );
   }
 
   onTextChange( value ) {
-    //Empty now
+    this.setState({
+      value: value
+    })
   }
 
   render() {

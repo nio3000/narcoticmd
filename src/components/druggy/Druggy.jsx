@@ -56,16 +56,22 @@ export class Druggy extends Component {
 
     this.state = {
       showCocaine: false,
+      selectedText: null,
+      selectionStart: 0,
+      selectionEnd: 0,
+      text: ""
     };
 
     // this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
     this.focus = this.focus.bind(this);
     this.giveMeCocaine = this.giveMeCocaine.bind(this);
+    this.handleSelectText = this.handleSelectText.bind(this);
 
   }
 
   componentDidMount() {
+    //Assume that selection is done if user release the shift key
     Mousetrap.bind('shift', this.giveMeCocaine, 'keyup');
   }
   componentWillUnmount() {
@@ -73,30 +79,35 @@ export class Druggy extends Component {
   }
 
   giveMeCocaine() {
-    //Assume that selection is done if user release the shift key
-    // if(event.keyCode === 16 && this.state.selectedText.length > 0) {
-    console.log('Cocaine!!!', this);
+    //Show Cocaine only when text is already selected
+    if(this.state.selectedText === "") return;
     this.setState({
       showCocaine: true
     })
     // }
   }
 
-
+  handleSelectText( start, end, text) {
+    this.setState({
+      selectedText: text,
+      selectionStart: start,
+      selectionEnd: end
+    });
+  }
 
   handleChooseFormat( format ) {
-    let selectedText = this.state.text.slice( this.state.selectedText[0], this.state.selectedText[1])
-    let formattedSelection = format.replace('{STR}', selectedText);
+    let formattedSelection = format.replace('{STR}', this.state.selectedText);
     this.setState({
       showCocaine: false,
-      text: this.state.text.replace(selectedText, formattedSelection)
+      text: formattedSelection
     });
+
     this.focus();
   }
 
   focus() {
-    this.textArea.focus();
-    this.textArea.selectionStart = this.textArea.selectionEnd;
+    // this.textArea.focus();
+    // this.textArea.selectionStart = this.textArea.selectionEnd;
   }
 
   render() {
@@ -107,7 +118,7 @@ export class Druggy extends Component {
     return (
       <div className="Druggy" style={style.container}>
         {cocaine}
-        <Ace cssClass="mousetrap"/>
+        <Ace cssClass="mousetrap" onSelectText={this.handleSelectText} value={this.state.text} />
       </div>
     );
   }
