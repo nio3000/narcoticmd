@@ -15,7 +15,7 @@ class Cocaine extends Component {
 
     this.optionsHandleChange = this.optionsHandleChange.bind(this);
     this.handleShortcut = this.handleShortcut.bind(this);
-
+    this.onBlur = this.onBlur.bind(this);
   }
 
   optionsHandleChange(value) {
@@ -43,6 +43,10 @@ class Cocaine extends Component {
     }
   }
 
+  onBlur() {
+    this.props.onBlur();
+  }
+
   render() {
     let options = <label className="cocaine__hidden-option"><Radio/></label>;
     if(this.state.choosenPortion && this.state.choosenPortion.options) {
@@ -56,7 +60,7 @@ class Cocaine extends Component {
       );
     }
     return (
-      <div className="cocaine">
+      <div className="cocaine" onBlur={this.onBlur}>
         <form>
           <input type="text" onChange={this.handleShortcut} onKeyDown={this.resetKey} className="cocaine__inhaler" autoFocus value={this.state.key}/>
 

@@ -11,3 +11,7 @@ describe('Cocaine', () => {
    expect(tree).toMatchSnapshot();
   })
 });
+
+//Hide on blur
+
+//Allow to delete selected text (x key in cocaine?)

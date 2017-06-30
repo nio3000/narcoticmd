@@ -64,9 +64,9 @@ export class Druggy extends Component {
 
     // this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
-    this.focus = this.focus.bind(this);
     this.giveMeCocaine = this.giveMeCocaine.bind(this);
     this.handleSelectText = this.handleSelectText.bind(this);
+    this.handleCocaineBlur = this.handleCocaineBlur.bind(this);
 
   }
 
@@ -105,15 +105,16 @@ export class Druggy extends Component {
     this.focus();
   }
 
-  focus() {
-    // this.textArea.focus();
-    // this.textArea.selectionStart = this.textArea.selectionEnd;
+  handleCocaineBlur() {
+    this.setState({
+      showCocaine: false
+    });
   }
 
   render() {
     let cocaine = null;
     if(this.state.showCocaine) {
-      cocaine = <Cocaine visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} />
+      cocaine = <Cocaine visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} onBlur={this.handleCocaineBlur} />
     }
     return (
       <div className="Druggy" style={style.container}>
@@ -130,11 +131,6 @@ export const style = {
     margin: 'auto',
     width: '80%'
   },
-  textarea: {
-    border: '2px solid #999',
-    height: '100%',
-    width: '100%',
-  }
 };
 
 

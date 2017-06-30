@@ -74,6 +74,7 @@ class Ace extends Component {
           showLineNumbers: this.state.showLineNumbers,
           tabSize: 2,
         }}
+        editorProps={{$blockScrolling: 'Infinity'}}
       />
     );
   }
