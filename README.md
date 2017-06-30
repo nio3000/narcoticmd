@@ -41,3 +41,10 @@ __Configuration in JSON__
 ### Others
 * Double shift opens Cocaine event when no text is selected,
 * Press shift for 2(?) seconds opens Cocaine with alternative options
+
+## Credits
+Icons:
+ * [Gregor Cresnar](http://www.flaticon.com/authors/gregor-cresnar) from [flaticon.com](http://www.flaticon.com)
+ 
+## License
+[MIT]()
