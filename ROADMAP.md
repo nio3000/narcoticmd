@@ -21,4 +21,4 @@
 * Integrate [Cucumber JS](https://github.com/cucumber/cucumber-js)
 * Add basic LD (Living Documentation) scenarios
 
-### 1.1.0 - Replace textarea with contenteditable [Draft.js?](https://draftjs.org/) in order to format text inside the Dealer
+### 1.1.0 - Replace Ace with contenteditable [Draft.js?](https://draftjs.org/) in order to format text inside the Dealer

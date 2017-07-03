@@ -67,12 +67,13 @@ export class Druggy extends Component {
     this.giveMeCocaine = this.giveMeCocaine.bind(this);
     this.handleSelectText = this.handleSelectText.bind(this);
     this.handleCocaineBlur = this.handleCocaineBlur.bind(this);
-
+    this.deleteSelection = this.deleteSelection.bind(this);
   }
 
   componentDidMount() {
     //Assume that selection is done if user release the shift key
     Mousetrap.bind('shift', this.giveMeCocaine, 'keyup');
+    Mousetrap.bind('backspace', this.deleteSelection)
   }
   componentWillUnmount() {
     Mousetrap.unbind('shift', this.giveMeCocaine, 'keyup')
@@ -84,7 +85,19 @@ export class Druggy extends Component {
     this.setState({
       showCocaine: true
     })
-    // }
+  }
+
+
+  deleteSelection() {
+    // this.setState({ selectedText: "" })
+    let end = this.state.selectedText.replace(this.state.selectedText, " ");
+    // let end = " ";
+    this.setState({
+      text: end,
+      // selectedText: end
+    })
+
+
   }
 
   handleSelectText( start, end, text) {
@@ -102,7 +115,7 @@ export class Druggy extends Component {
       text: formattedSelection
     });
 
-    this.focus();
+    // this.focus();
   }
 
   handleCocaineBlur() {
@@ -123,6 +136,7 @@ export class Druggy extends Component {
       </div>
     );
   }
+
 }
 
 export const style = {

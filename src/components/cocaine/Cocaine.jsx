@@ -13,12 +13,16 @@ class Cocaine extends Component {
       key: ''
     };
 
-    this.optionsHandleChange = this.optionsHandleChange.bind(this);
+    this.chooseFormatting = this.chooseFormatting.bind(this);
     this.handleShortcut = this.handleShortcut.bind(this);
     this.onBlur = this.onBlur.bind(this);
   }
 
-  optionsHandleChange(value) {
+  /**
+   * Choose formatting option
+   * @param value ???
+   */
+  chooseFormatting(value) {
     this.setState({ selectedValue: value });
   }
 
@@ -43,6 +47,17 @@ class Cocaine extends Component {
     }
   }
 
+  /**
+   * Replace first occurence of shortcut in formatting option name
+   * @param option string
+   */
+  displayShortcut( option ) {
+    //
+  }
+
+  /**
+   * Change Cocaine visible state in parent component
+   */
   onBlur() {
     this.props.onBlur();
   }
@@ -62,7 +77,7 @@ class Cocaine extends Component {
     return (
       <div className="cocaine" onBlur={this.onBlur}>
         <form>
-          <input type="text" onChange={this.handleShortcut} onKeyDown={this.resetKey} className="cocaine__inhaler" autoFocus value={this.state.key}/>
+          <input type="text" onChange={this.handleShortcut} onKeyDown={this.resetKey} className="cocaine__inhaler mousetrap" autoFocus value={this.state.key}/>
 
           {this.props.portion.map( item =>
             <section className="cocaine__section" key={item.key}>
@@ -73,7 +88,7 @@ class Cocaine extends Component {
           <RadioGroup
             name="headers"
             selectedValue={this.setState.selectedValue}
-            onChange={this.optionsHandleChange}
+            onChange={this.chooseFormatting}
             className="cocaine__section-options">
             {options}
           </RadioGroup>

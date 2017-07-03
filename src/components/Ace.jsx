@@ -31,7 +31,7 @@ class Ace extends Component {
     const textarea = this.aceEditor.editor.textInput.getElement();
     textarea.classList.add(this.props.cssClass);
 
-    this.state.value = this.props.value;
+    this.setState({ value: this.props.value })
   }
 
   componentWillReceiveProps( nextProps ) {
