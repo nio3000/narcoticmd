@@ -1,27 +1,27 @@
 import React, { Component } from 'react'
 import Cocaine from "../cocaine/Cocaine";
-import Ace from '../Ace';
 import Mousetrap from 'mousetrap';
+import SimpleMDE from 'react-simplemde-editor';
 
+require("react-simplemde-editor/dist/simplemde.min.css");
 
 const portion = [
   {
     name: 'header',
     key: 'h',
     options: [
-      { key: '1', name: 'h1', format: '#{STR}'},
-      { key: '2', name: 'h2', format: '##{STR}'},
-      { key: '3', name: 'h3', format: '###{STR}'},
-      { key: '4', name: 'h4', format: '####{STR}'}
+      { key: '1', name: 'h1', format: 'h1'},
+      { key: '2', name: 'h2', format: 'h2'},
+      { key: '3', name: 'h3', format: 'h3'},
     ]
   },
   {
     name: 'emphasis',
     key: 'e',
     options: [
-      {key: 'b', name: 'b', format: '__{STR}__'},
-      {key: 'i', name: 'i', format: '_{STR}_'},
-      {key: 's', name: 's', format: '~~{STR}~~'}
+      {key: 'b', name: 'b', format: 'bold'},
+      {key: 'i', name: 'i', format: 'italic'},
+      {key: 's', name: 's', format: 'strike'}
     ]
   },
   {
@@ -50,6 +50,8 @@ const portion = [
 //   Line Breaks
 // YouTube Videos
 
+
+
 export class Druggy extends Component {
   constructor( props ) {
     super(props);
@@ -59,24 +61,23 @@ export class Druggy extends Component {
       selectedText: null,
       selectionStart: 0,
       selectionEnd: 0,
-      text: ""
+      value: ""
     };
 
-    // this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
     this.giveMeCocaine = this.giveMeCocaine.bind(this);
-    this.handleSelectText = this.handleSelectText.bind(this);
     this.handleCocaineBlur = this.handleCocaineBlur.bind(this);
-    this.deleteSelection = this.deleteSelection.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.formatOption = this.formatOption.bind(this);
   }
 
   componentDidMount() {
     //Assume that selection is done if user release the shift key
-    Mousetrap.bind('shift', this.giveMeCocaine, 'keyup');
+    // Mousetrap.bind('shift', this.giveMeCocaine, 'keyup');
     Mousetrap.bind('backspace', this.deleteSelection)
   }
   componentWillUnmount() {
-    Mousetrap.unbind('shift', this.giveMeCocaine, 'keyup')
+    // Mousetrap.unbind('shift', this.giveMeCocaine, 'keyup')
   }
 
   giveMeCocaine() {
@@ -87,41 +88,86 @@ export class Druggy extends Component {
     })
   }
 
+  extraKeys = {
+    // Up: (cm) => {
+    //   // cm.replaceSelection("");
+    //   // this.editor.simplemde['toggleBold']();
+    //   // this.editor;
+    // },
+    "Shift": (cm) => {
+      if (cm.getSelection()) {
+        this.giveMeCocaine();
+      }
+    }
+  };
 
-  deleteSelection() {
-    // this.setState({ selectedText: "" })
-    let end = this.state.selectedText.replace(this.state.selectedText, " ");
-    // let end = " ";
-    this.setState({
-      text: end,
-      // selectedText: end
-    })
-
-
-  }
-
-  handleSelectText( start, end, text) {
-    this.setState({
-      selectedText: text,
-      selectionStart: start,
-      selectionEnd: end
-    });
+  /**
+   * map format option choosen in Cocaine to name required by editor
+   * @param format string
+   *
+   * TODO: Unit test
+   */
+  formatOption( format ) {
+    let functionName;
+    switch( format ) {
+      case 'bold':
+        functionName = 'toggleBold';
+        break;
+      case 'italic':
+        functionName = 'toggleItalic';
+        break;
+      case 'strike':
+        functionName = 'toggleStrikethrough';
+        break;
+      case 'h1':
+        functionName = 'toggleHeading1';
+        break;
+      case 'h2':
+        functionName = 'toggleHeading2';
+        break;
+      case 'h3':
+        functionName = 'toggleHeading3';
+        break;
+      default:
+        functionName = null;
+    }
+    return functionName;
   }
 
   handleChooseFormat( format ) {
-    let formattedSelection = format.replace('{STR}', this.state.selectedText);
+    // let formattedSelection = format.replace('{STR}', this.state.selectedText);
+    if(this.formatOption( format )) {
+      this.editor.simplemde[this.formatOption(format)]();
+    }
     this.setState({
       showCocaine: false,
-      text: formattedSelection
     });
-
-    // this.focus();
+    //Clear selection by set cursor at the end of selected text
+    this.editor.simplemde.codemirror.setCursor(this.editor.simplemde.codemirror.getCursor(false));
+    this.editor.simplemde.codemirror.focus();
   }
 
   handleCocaineBlur() {
     this.setState({
       showCocaine: false
     });
+  }
+
+  onChange( value ) {
+    // console.log('vaalue!', this.editor.simplemde.__codemirror.getSelection());
+    if(this.editor.simplemde.codemirror.somethingSelected()) {
+     const showCocaine =  setInterval(() => {
+       clearInterval( showCocaine );
+       this.giveMeCocaine();
+       console.log('Zaznaczone!');
+
+      }, 1000);
+
+    }
+
+    this.setState({
+      value: value
+    })
   }
 
   render() {
@@ -132,7 +178,19 @@ export class Druggy extends Component {
     return (
       <div className="Druggy" style={style.container}>
         {cocaine}
-        <Ace cssClass="mousetrap" onSelectText={this.handleSelectText} value={this.state.text} />
+        <SimpleMDE
+          // value={this.state.value}
+          onChange={this.onChange}
+          options={
+            {
+              autofocus: true,
+              spellChecker: true
+            }
+          }
+          extraKeys={this.extraKeys}
+          ref={( editor ) => this.editor = editor}
+
+        />
       </div>
     );
   }

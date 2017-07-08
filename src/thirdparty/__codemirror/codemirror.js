@@ -411,7 +411,7 @@ function getLine(doc, n) {
 function getBetween(doc, start, end) {
   var out = [], n = start.line
   doc.iter(start.line, end.line + 1, function (line) {
-    var text = line.text
+    var text = line.value
     if (n == end.line) { text = text.slice(0, end.ch) }
     if (n == start.line) { text = text.slice(start.ch) }
     out.push(text)
@@ -422,7 +422,7 @@ function getBetween(doc, start, end) {
 // Get the lines between from and to, as array of strings.
 function getLines(doc, from, to) {
   var out = []
-  doc.iter(from, to, function (line) { out.push(line.text) }) // iter aborts when callback returns truthy value
+  doc.iter(from, to, function (line) { out.push(line.value) }) // iter aborts when callback returns truthy value
   return out
 }
 
@@ -501,8 +501,8 @@ function clipLine(doc, n) {return Math.max(doc.first, Math.min(n, doc.first + do
 function clipPos(doc, pos) {
   if (pos.line < doc.first) { return Pos(doc.first, 0) }
   var last = doc.first + doc.size - 1
-  if (pos.line > last) { return Pos(last, getLine(doc, last).text.length) }
-  return clipToLen(pos, getLine(doc, pos.line).text.length)
+  if (pos.line > last) { return Pos(last, getLine(doc, last).value.length) }
+  return clipToLen(pos, getLine(doc, pos.line).value.length)
 }
 function clipToLen(pos, linelen) {
   var ch = pos.ch
@@ -603,7 +603,7 @@ function stretchSpansOverChange(doc, change) {
   var last = markedSpansAfter(oldLast, endCh, isInsert)
 
   // Next, merge those two ends
-  var sameLine = change.text.length == 1, offset = lst(change.text).length + (sameLine ? startCh : 0)
+  var sameLine = change.value.length == 1, offset = lst(change.value).length + (sameLine ? startCh : 0)
   if (first) {
     // Fix up .to properties of first
     for (var i = 0; i < first.length; ++i) {
@@ -639,7 +639,7 @@ function stretchSpansOverChange(doc, change) {
   var newMarkers = [first]
   if (!sameLine) {
     // Fill gap with whole-line-spans
-    var gap = change.text.length - 2, gapMarkers
+    var gap = change.value.length - 2, gapMarkers
     if (gap > 0 && first)
       { for (var i$2 = 0; i$2 < first.length; ++i$2)
         { if (first[i$2].to == null)
@@ -827,7 +827,7 @@ function lineIsHiddenInner(doc, line, span) {
     var end = span.marker.find(1, true)
     return lineIsHiddenInner(doc, end.line, getMarkedSpanFor(end.line.markedSpans, span.marker))
   }
-  if (span.marker.inclusiveRight && span.to == line.text.length)
+  if (span.marker.inclusiveRight && span.to == line.value.length)
     { return true }
   for (var sp = (void 0), i = 0; i < line.markedSpans.length; ++i) {
     sp = line.markedSpans[i]
@@ -863,7 +863,7 @@ function heightAtLine(lineObj) {
 // other lines onto it.
 function lineLength(line) {
   if (line.height == 0) { return 0 }
-  var len = line.text.length, merged, cur = line
+  var len = line.value.length, merged, cur = line
   while (merged = collapsedSpanAtStart(cur)) {
     var found = merged.find(0, true)
     cur = found.from.line
@@ -872,9 +872,9 @@ function lineLength(line) {
   cur = line
   while (merged = collapsedSpanAtEnd(cur)) {
     var found$1 = merged.find(0, true)
-    len -= cur.text.length - found$1.from.ch
+    len -= cur.value.length - found$1.from.ch
     cur = found$1.to.line
-    len += cur.text.length - found$1.to.ch
+    len += cur.value.length - found$1.to.ch
   }
   return len
 }
@@ -1101,13 +1101,13 @@ var bidiOrdering = (function() {
 // BidiSpan objects otherwise.
 function getOrder(line, direction) {
   var order = line.order
-  if (order == null) { order = line.order = bidiOrdering(line.text, direction) }
+  if (order == null) { order = line.order = bidiOrdering(line.value, direction) }
   return order
 }
 
 function moveCharLogically(line, ch, dir) {
-  var target = skipExtendingChars(line.text, ch + dir, dir)
-  return target < 0 || target > line.text.length ? null : target
+  var target = skipExtendingChars(line.value, ch + dir, dir)
+  return target < 0 || target > line.value.length ? null : target
 }
 
 function moveLogically(line, start, dir) {
@@ -1131,7 +1131,7 @@ function endOfLine(visually, cm, lineObj, lineNo, dir) {
       // as the last (content-order) character).
       if (part.level > 0) {
         var prep = prepareMeasureForLine(cm, lineObj)
-        ch = dir < 0 ? lineObj.text.length - 1 : 0
+        ch = dir < 0 ? lineObj.value.length - 1 : 0
         var targetTop = measureCharPrepared(cm, prep, ch).top
         ch = findFirst(function (ch) { return measureCharPrepared(cm, prep, ch).top == targetTop; }, (dir < 0) == (part.level == 1) ? part.from : part.to - 1, ch)
         if (sticky == "before") { ch = moveCharLogically(lineObj, ch, 1, true) }
@@ -1139,14 +1139,14 @@ function endOfLine(visually, cm, lineObj, lineNo, dir) {
       return new Pos(lineNo, ch, sticky)
     }
   }
-  return new Pos(lineNo, dir < 0 ? lineObj.text.length : 0, dir < 0 ? "before" : "after")
+  return new Pos(lineNo, dir < 0 ? lineObj.value.length : 0, dir < 0 ? "before" : "after")
 }
 
 function moveVisually(cm, line, start, dir) {
   var bidi = getOrder(line, cm.doc.direction)
   if (!bidi) { return moveLogically(line, start, dir) }
-  if (start.ch >= line.text.length) {
-    start.ch = line.text.length
+  if (start.ch >= line.value.length) {
+    start.ch = line.value.length
     start.sticky = "before"
   } else if (start.ch <= 0) {
     start.ch = 0
@@ -1162,7 +1162,7 @@ function moveVisually(cm, line, start, dir) {
   var mv = function (pos, dir) { return moveCharLogically(line, pos instanceof Pos ? pos.ch : pos, dir); }
   var prep
   var getWrappedLineExtent = function (ch) {
-    if (!cm.options.lineWrapping) { return {begin: 0, end: line.text.length} }
+    if (!cm.options.lineWrapping) { return {begin: 0, end: line.value.length} }
     prep = prep || prepareMeasureForLine(cm, line)
     return wrappedLineExtentChar(cm, line, prep, ch)
   }
@@ -1202,7 +1202,7 @@ function moveVisually(cm, line, start, dir) {
 
   // Case 3b: Look for other bidi parts on the next visual line
   var nextCh = dir > 0 ? wrappedLineExtent.end : mv(wrappedLineExtent.begin, -1)
-  if (nextCh != null && !(dir > 0 && nextCh == line.text.length)) {
+  if (nextCh != null && !(dir > 0 && nextCh == line.value.length)) {
     res = searchInVisualLine(dir > 0 ? 0 : bidi.length - 1, dir, getWrappedLineExtent(nextCh))
     if (res) { return res }
   }
@@ -1575,13 +1575,13 @@ function highlightLine(cm, line, state, forceToEnd) {
   // mode/overlays that it is based on (for easy invalidation).
   var st = [cm.state.modeGen], lineClasses = {}
   // Compute the base array of styles
-  runMode(cm, line.text, cm.doc.mode, state, function (end, style) { return st.push(end, style); },
+  runMode(cm, line.value, cm.doc.mode, state, function (end, style) { return st.push(end, style); },
     lineClasses, forceToEnd)
 
   // Run overlays, adjust style array.
   var loop = function ( o ) {
     var overlay = cm.state.overlays[o], i = 1, at = 0
-    runMode(cm, line.text, overlay.mode, true, function (end, style) {
+    runMode(cm, line.value, overlay.mode, true, function (end, style) {
       var start = i
       // Ensure there's a token end at the current position, and that i points at it
       while (at < end) {
@@ -1612,7 +1612,7 @@ function highlightLine(cm, line, state, forceToEnd) {
 function getLineStyles(cm, line, updateFrontier) {
   if (!line.styles || line.styles[0] != cm.state.modeGen) {
     var state = getStateBefore(cm, lineNo(line))
-    var result = highlightLine(cm, line, line.text.length > cm.options.maxHighlightLength ? copyState(cm.doc.mode, state) : state)
+    var result = highlightLine(cm, line, line.value.length > cm.options.maxHighlightLength ? copyState(cm.doc.mode, state) : state)
     line.stateAfter = state
     line.styles = result.styles
     if (result.classes) { line.styleClasses = result.classes }
@@ -1629,7 +1629,7 @@ function getStateBefore(cm, n, precise) {
   if (!state) { state = startState(doc.mode) }
   else { state = copyState(doc.mode, state) }
   doc.iter(pos, n, function (line) {
-    processLine(cm, line.text, state)
+    processLine(cm, line.value, state)
     var save = pos == n - 1 || pos % 5 == 0 || pos >= display.viewFrom && pos < display.viewTo
     line.stateAfter = save ? copyState(doc.mode, state) : null
     ++pos
@@ -1680,7 +1680,7 @@ function takeToken(cm, pos, precise, asArray) {
   var doc = cm.doc, mode = doc.mode, style
   pos = clipPos(doc, pos)
   var line = getLine(doc, pos.line), state = getStateBefore(cm, pos.line, precise)
-  var stream = new StringStream(line.text, cm.options.tabSize), tokens
+  var stream = new StringStream(line.value, cm.options.tabSize), tokens
   if (asArray) { tokens = [] }
   while ((asArray || stream.pos < pos.ch) && !stream.eol()) {
     stream.start = stream.pos
@@ -1756,7 +1756,7 @@ function findStartLine(cm, n, precise) {
     if (search <= doc.first) { return doc.first }
     var line = getLine(doc, search - 1)
     if (line.stateAfter && (!precise || search <= doc.frontier)) { return search }
-    var indented = countColumn(line.text, null, cm.options.tabSize)
+    var indented = countColumn(line.value, null, cm.options.tabSize)
     if (minline == null || minindent > indented) {
       minline = search - 1
       minindent = indented
@@ -1782,7 +1782,7 @@ eventMixin(Line)
 // invalidates cached information and tries to re-estimate the
 // line's height.
 function updateLine(line, text, markedSpans, estimateHeight) {
-  line.text = text
+  line.value = text
   if (line.stateAfter) { line.stateAfter = null }
   if (line.styles) { line.styles = null }
   if (line.order != null) { line.order = null }
@@ -1998,7 +1998,7 @@ function buildCollapsedSpan(builder, size, marker, ignoreWidget) {
 // Outputs a number of spans to make up a line, taking highlighting
 // and marked text into account.
 function insertLineContent(line, builder, styles) {
-  var spans = line.markedSpans, allText = line.text, at = 0
+  var spans = line.markedSpans, allText = line.value, at = 0
   if (!spans) {
     for (var i$1 = 1; i$1 < styles.length; i$1+=2)
       { builder.addToken(builder, allText.slice(at, at = styles[i$1]), interpretTokenStyle(styles[i$1+1], builder.cm.options)) }
@@ -2183,11 +2183,11 @@ function updateLineForChanges(cm, lineView, lineN, dims) {
 // Lines with gutter elements, widgets or a background class need to
 // be wrapped, and have the extra elements added to the wrapper div
 function ensureLineWrapped(lineView) {
-  if (lineView.node == lineView.text) {
+  if (lineView.node == lineView.value) {
     lineView.node = elt("div", null, null, "position: relative")
-    if (lineView.text.parentNode)
-      { lineView.text.parentNode.replaceChild(lineView.node, lineView.text) }
-    lineView.node.appendChild(lineView.text)
+    if (lineView.value.parentNode)
+      { lineView.value.parentNode.replaceChild(lineView.node, lineView.value) }
+    lineView.node.appendChild(lineView.value)
     if (ie && ie_version < 8) { lineView.node.style.zIndex = 2 }
   }
   return lineView.node
@@ -2222,17 +2222,17 @@ function getLineContent(cm, lineView) {
 // classes because the mode may output tokens that influence these
 // classes.
 function updateLineText(cm, lineView) {
-  var cls = lineView.text.className
+  var cls = lineView.value.className
   var built = getLineContent(cm, lineView)
-  if (lineView.text == lineView.node) { lineView.node = built.pre }
-  lineView.text.parentNode.replaceChild(built.pre, lineView.text)
-  lineView.text = built.pre
+  if (lineView.value == lineView.node) { lineView.node = built.pre }
+  lineView.value.parentNode.replaceChild(built.pre, lineView.value)
+  lineView.value = built.pre
   if (built.bgClass != lineView.bgClass || built.textClass != lineView.textClass) {
     lineView.bgClass = built.bgClass
     lineView.textClass = built.textClass
     updateLineClasses(cm, lineView)
   } else if (cls) {
-    lineView.text.className = cls
+    lineView.value.className = cls
   }
 }
 
@@ -2240,10 +2240,10 @@ function updateLineClasses(cm, lineView) {
   updateLineBackground(cm, lineView)
   if (lineView.line.wrapClass)
     { ensureLineWrapped(lineView).className = lineView.line.wrapClass }
-  else if (lineView.node != lineView.text)
+  else if (lineView.node != lineView.value)
     { lineView.node.className = "" }
   var textClass = lineView.textClass ? lineView.textClass + " " + (lineView.line.textClass || "") : lineView.line.textClass
-  lineView.text.className = textClass || ""
+  lineView.value.className = textClass || ""
 }
 
 function updateLineGutter(cm, lineView, lineN, dims) {
@@ -2260,14 +2260,14 @@ function updateLineGutter(cm, lineView, lineN, dims) {
     lineView.gutterBackground = elt("div", null, "CodeMirror-gutter-background " + lineView.line.gutterClass,
                                     ("left: " + (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) + "px; width: " + (dims.gutterTotalWidth) + "px"))
     cm.display.input.setUneditable(lineView.gutterBackground)
-    wrap.insertBefore(lineView.gutterBackground, lineView.text)
+    wrap.insertBefore(lineView.gutterBackground, lineView.value)
   }
   var markers = lineView.line.gutterMarkers
   if (cm.options.lineNumbers || markers) {
     var wrap$1 = ensureLineWrapped(lineView)
     var gutterWrap = lineView.gutter = elt("div", null, "CodeMirror-gutter-wrapper", ("left: " + (cm.options.fixedGutter ? dims.fixedPos : -dims.gutterTotalWidth) + "px"))
     cm.display.input.setUneditable(gutterWrap)
-    wrap$1.insertBefore(gutterWrap, lineView.text)
+    wrap$1.insertBefore(gutterWrap, lineView.value)
     if (lineView.line.gutterClass)
       { gutterWrap.className += " " + lineView.line.gutterClass }
     if (cm.options.lineNumbers && (!markers || !markers["CodeMirror-linenumbers"]))
@@ -2297,7 +2297,7 @@ function updateLineWidgets(cm, lineView, dims) {
 // Build a line's DOM representation from scratch
 function buildLineElement(cm, lineView, lineN, dims) {
   var built = getLineContent(cm, lineView)
-  lineView.text = lineView.node = built.pre
+  lineView.value = lineView.node = built.pre
   if (built.bgClass) { lineView.bgClass = built.bgClass }
   if (built.textClass) { lineView.textClass = built.textClass }
 
@@ -2324,7 +2324,7 @@ function insertLineWidgetsFor(cm, line, lineView, dims, allowAbove) {
     positionLineWidget(widget, node, lineView, dims)
     cm.display.input.setUneditable(node)
     if (allowAbove && widget.above)
-      { wrap.insertBefore(node, lineView.gutter || lineView.text) }
+      { wrap.insertBefore(node, lineView.gutter || lineView.value) }
     else
       { wrap.appendChild(node) }
     signalLater(widget, "redraw")
@@ -2405,7 +2405,7 @@ function ensureLineHeights(cm, lineView, rect) {
     var heights = lineView.measure.heights = []
     if (wrapping) {
       lineView.measure.width = curWidth
-      var rects = lineView.text.firstChild.getClientRects()
+      var rects = lineView.value.firstChild.getClientRects()
       for (var i = 0; i < rects.length - 1; i++) {
         var cur = rects[i], next = rects[i + 1]
         if (Math.abs(cur.bottom - next.bottom) > 2)
@@ -2466,7 +2466,7 @@ function findViewForLine(cm, lineN) {
 function prepareMeasureForLine(cm, line) {
   var lineN = lineNo(line)
   var view = findViewForLine(cm, lineN)
-  if (view && !view.text) {
+  if (view && !view.value) {
     view = null
   } else if (view && view.changes) {
     updateLineForChanges(cm, view, lineN, getDimensions(cm))
@@ -2492,7 +2492,7 @@ function measureCharPrepared(cm, prepared, ch, bias, varHeight) {
     found = prepared.cache[key]
   } else {
     if (!prepared.rect)
-      { prepared.rect = prepared.view.text.getBoundingClientRect() }
+      { prepared.rect = prepared.view.value.getBoundingClientRect() }
     if (!prepared.hasHeights) {
       ensureLineHeights(cm, prepared.view, prepared.rect)
       prepared.hasHeights = true
@@ -2562,8 +2562,8 @@ function measureCharInner(cm, prepared, ch, bias) {
   var rect
   if (node.nodeType == 3) { // If it is a text node, use a range to retrieve the coordinates.
     for (var i$1 = 0; i$1 < 4; i$1++) { // Retry a maximum of 4 times when nonsense rectangles are returned
-      while (start && isExtendingChar(prepared.line.text.charAt(place.coverStart + start))) { --start }
-      while (place.coverStart + end < place.coverEnd && isExtendingChar(prepared.line.text.charAt(place.coverStart + end))) { ++end }
+      while (start && isExtendingChar(prepared.line.value.charAt(place.coverStart + start))) { --start }
+      while (place.coverStart + end < place.coverEnd && isExtendingChar(prepared.line.value.charAt(place.coverStart + end))) { ++end }
       if (ie && ie_version < 9 && start == 0 && end == place.coverEnd - place.coverStart)
         { rect = node.parentNode.getBoundingClientRect() }
       else
@@ -2726,8 +2726,8 @@ function cursorCoords(cm, pos, context, lineObj, preparedMeasure, varHeight) {
     return intoCoordSystem(cm, lineObj, m, context)
   }
   var order = getOrder(lineObj, cm.doc.direction), ch = pos.ch, sticky = pos.sticky
-  if (ch >= lineObj.text.length) {
-    ch = lineObj.text.length
+  if (ch >= lineObj.value.length) {
+    ch = lineObj.value.length
     sticky = "before"
   } else if (ch <= 0) {
     ch = 0
@@ -2778,7 +2778,7 @@ function coordsChar(cm, x, y) {
   if (y < 0) { return PosWithInfo(doc.first, 0, null, true, -1) }
   var lineN = lineAtHeight(doc, y), last = doc.first + doc.size - 1
   if (lineN > last)
-    { return PosWithInfo(doc.first + doc.size - 1, getLine(doc, last).text.length, null, true, 1) }
+    { return PosWithInfo(doc.first + doc.size - 1, getLine(doc, last).value.length, null, true, 1) }
   if (x < 0) { x = 0 }
 
   var lineObj = getLine(doc, lineN)
@@ -2795,7 +2795,7 @@ function coordsChar(cm, x, y) {
 
 function wrappedLineExtent(cm, lineObj, preparedMeasure, y) {
   var measure = function (ch) { return intoCoordSystem(cm, lineObj, measureCharPrepared(cm, preparedMeasure, ch), "line"); }
-  var end = lineObj.text.length
+  var end = lineObj.value.length
   var begin = findFirst(function (ch) { return measure(ch - 1).bottom <= y; }, end, 0)
   end = findFirst(function (ch) { return measure(ch).top > y; }, begin, end)
   return {begin: begin, end: end}
@@ -2808,7 +2808,7 @@ function wrappedLineExtentChar(cm, lineObj, preparedMeasure, target) {
 
 function coordsCharInner(cm, lineObj, lineNo, x, y) {
   y -= heightAtLine(lineObj)
-  var begin = 0, end = lineObj.text.length
+  var begin = 0, end = lineObj.value.length
   var preparedMeasure = prepareMeasureForLine(cm, lineObj)
   var pos
   var order = getOrder(lineObj, cm.doc.direction)
@@ -2848,7 +2848,7 @@ function coordsCharInner(cm, lineObj, lineNo, x, y) {
       else if (box.right < x) { return false }
       else { return (x - box.left < box.right - x) }
     }, begin, end)
-    ch = skipExtendingChars(lineObj.text, ch, 1)
+    ch = skipExtendingChars(lineObj.value, ch, 1)
     pos = new Pos(lineNo, ch, ch == end ? "before" : "after")
   }
   var coords = cursorCoords(cm, pos, "line", lineObj, preparedMeasure)
@@ -2927,7 +2927,7 @@ function estimateHeight(cm) {
     } }
 
     if (wrapping)
-      { return widgetsHeight + (Math.ceil(line.text.length / perLine) || 1) * th }
+      { return widgetsHeight + (Math.ceil(line.value.length / perLine) || 1) * th }
     else
       { return widgetsHeight + th }
   }
@@ -2955,7 +2955,7 @@ function posFromMouse(cm, e, liberal, forRect) {
   try { x = e.clientX - space.left; y = e.clientY - space.top }
   catch (e) { return null }
   var coords = coordsChar(cm, x, y), line
-  if (forRect && coords.xRel == 1 && (line = getLine(cm.doc, coords.line).text).length == coords.ch) {
+  if (forRect && coords.xRel == 1 && (line = getLine(cm.doc, coords.line).value).length == coords.ch) {
     var colDiff = countColumn(line, line.length, cm.options.tabSize) - line.length
     coords = Pos(coords.line, Math.max(0, Math.round((x - paddingH(cm.display).left) / charWidth(cm.display)) - colDiff))
   }
@@ -3032,7 +3032,7 @@ function drawSelectionRange(cm, range, output) {
 
   function drawForLine(line, fromArg, toArg) {
     var lineObj = getLine(doc, line)
-    var lineLen = lineObj.text.length
+    var lineLen = lineObj.value.length
     var start, end
     function coords(ch, bias) {
       return charCoords(cm, Pos(line, ch), "div", lineObj, bias)
@@ -3072,7 +3072,7 @@ function drawSelectionRange(cm, range, output) {
   } else {
     var fromLine = getLine(doc, sFrom.line), toLine = getLine(doc, sTo.line)
     var singleVLine = visualLine(fromLine) == visualLine(toLine)
-    var leftEnd = drawForLine(sFrom.line, sFrom.ch, singleVLine ? fromLine.text.length + 1 : null).end
+    var leftEnd = drawForLine(sFrom.line, sFrom.ch, singleVLine ? fromLine.value.length + 1 : null).end
     var rightStart = drawForLine(sTo.line, singleVLine ? 0 : null, sTo.ch).start
     if (singleVLine) {
       if (leftEnd.top < rightStart.top - 2) {
@@ -3771,7 +3771,7 @@ function endOperation_R2(op) {
   // and ensure the document's width matches it.
   // updateDisplay_W2 will use these properties to do the actual resizing
   if (display.maxLineChanged && !cm.options.lineWrapping) {
-    op.adjustWidthTo = measureChar(cm, display.maxLine, display.maxLine.text.length).left + 3
+    op.adjustWidthTo = measureChar(cm, display.maxLine, display.maxLine.value.length).left + 3
     cm.display.sizerWidth = op.adjustWidthTo
     op.barMeasure.scrollWidth =
       Math.max(display.scroller.clientWidth, display.sizer.offsetLeft + op.adjustWidthTo + scrollGap(cm) + cm.display.barWidth)
@@ -4054,7 +4054,7 @@ function highlightWorker(cm) {
 
   doc.iter(doc.frontier, Math.min(doc.first + doc.size, cm.display.viewTo + 500), function (line) {
     if (doc.frontier >= cm.display.viewFrom) { // Visible
-      var oldStyles = line.styles, tooLong = line.text.length > cm.options.maxHighlightLength
+      var oldStyles = line.styles, tooLong = line.value.length > cm.options.maxHighlightLength
       var highlighted = highlightLine(cm, line, tooLong ? copyState(doc.mode, state) : state, true)
       line.styles = highlighted.styles
       var oldCls = line.styleClasses, newCls = highlighted.classes
@@ -4066,8 +4066,8 @@ function highlightWorker(cm) {
       if (ischange) { changedLines.push(doc.frontier) }
       line.stateAfter = tooLong ? state : copyState(doc.mode, state)
     } else {
-      if (line.text.length <= cm.options.maxHighlightLength)
-        { processLine(cm, line.text, state) }
+      if (line.value.length <= cm.options.maxHighlightLength)
+        { processLine(cm, line.value, state) }
       line.stateAfter = doc.frontier % 5 == 0 ? copyState(doc.mode, state) : null
     }
     ++doc.frontier
@@ -4412,9 +4412,9 @@ function simpleSelection(anchor, head) {
 // Compute the position of the end of a change (its 'to' property
 // refers to the pre-change end).
 function changeEnd(change) {
-  if (!change.text) { return change.to }
-  return Pos(change.from.line + change.text.length - 1,
-             lst(change.text).length + (change.text.length == 1 ? change.from.ch : 0))
+  if (!change.value) { return change.to }
+  return Pos(change.from.line + change.value.length - 1,
+             lst(change.value).length + (change.value.length == 1 ? change.from.ch : 0))
 }
 
 // Adjust a position to refer to the post-change position of the
@@ -4423,7 +4423,7 @@ function adjustForChange(pos, change) {
   if (cmp(pos, change.from) < 0) { return pos }
   if (cmp(pos, change.to) <= 0) { return changeEnd(change) }
 
-  var line = pos.line + change.text.length - (change.to.line - change.from.line) - 1, ch = pos.ch
+  var line = pos.line + change.value.length - (change.to.line - change.from.line) - 1, ch = pos.ch
   if (pos.line == change.to.line) { ch += changeEnd(change).ch - change.to.ch }
   return Pos(line, ch)
 }
@@ -4490,7 +4490,7 @@ function resetModeState(cm) {
 // are treated specially, in order to make the association of line
 // widgets and marker elements with the text behave more intuitive.
 function isWholeLineUpdate(doc, change) {
-  return change.from.ch == 0 && change.to.ch == 0 && lst(change.text) == "" &&
+  return change.from.ch == 0 && change.to.ch == 0 && lst(change.value) == "" &&
     (!doc.cm || doc.cm.options.wholeLineUpdateBefore)
 }
 
@@ -4508,7 +4508,7 @@ function updateDoc(doc, change, markedSpans, estimateHeight) {
     return result
   }
 
-  var from = change.from, to = change.to, text = change.text
+  var from = change.from, to = change.to, text = change.value
   var firstLine = getLine(doc, from.line), lastLine = getLine(doc, to.line)
   var lastText = lst(text), lastSpans = spansFor(text.length - 1), nlines = to.line - from.line
 
@@ -4520,24 +4520,24 @@ function updateDoc(doc, change, markedSpans, estimateHeight) {
     // This is a whole-line replace. Treated specially to make
     // sure line objects move the way they are supposed to.
     var added = linesFor(0, text.length - 1)
-    update(lastLine, lastLine.text, lastSpans)
+    update(lastLine, lastLine.value, lastSpans)
     if (nlines) { doc.remove(from.line, nlines) }
     if (added.length) { doc.insert(from.line, added) }
   } else if (firstLine == lastLine) {
     if (text.length == 1) {
-      update(firstLine, firstLine.text.slice(0, from.ch) + lastText + firstLine.text.slice(to.ch), lastSpans)
+      update(firstLine, firstLine.value.slice(0, from.ch) + lastText + firstLine.value.slice(to.ch), lastSpans)
     } else {
       var added$1 = linesFor(1, text.length - 1)
-      added$1.push(new Line(lastText + firstLine.text.slice(to.ch), lastSpans, estimateHeight))
-      update(firstLine, firstLine.text.slice(0, from.ch) + text[0], spansFor(0))
+      added$1.push(new Line(lastText + firstLine.value.slice(to.ch), lastSpans, estimateHeight))
+      update(firstLine, firstLine.value.slice(0, from.ch) + text[0], spansFor(0))
       doc.insert(from.line + 1, added$1)
     }
   } else if (text.length == 1) {
-    update(firstLine, firstLine.text.slice(0, from.ch) + text[0] + lastLine.text.slice(to.ch), spansFor(0))
+    update(firstLine, firstLine.value.slice(0, from.ch) + text[0] + lastLine.value.slice(to.ch), spansFor(0))
     doc.remove(from.line + 1, nlines)
   } else {
-    update(firstLine, firstLine.text.slice(0, from.ch) + text[0], spansFor(0))
-    update(lastLine, lastText + lastLine.text.slice(to.ch), lastSpans)
+    update(firstLine, firstLine.value.slice(0, from.ch) + text[0], spansFor(0))
+    update(lastLine, lastText + lastLine.value.slice(to.ch), lastSpans)
     var added$2 = linesFor(1, text.length - 1)
     if (nlines > 1) { doc.remove(from.line + 1, nlines - 1) }
     doc.insert(from.line + 1, added$2)
@@ -4747,7 +4747,7 @@ function getOldSpans(doc, change) {
   var found = change["spans_" + doc.id]
   if (!found) { return null }
   var nw = []
-  for (var i = 0; i < change.text.length; ++i)
+  for (var i = 0; i < change.value.length; ++i)
     { nw.push(removeClearedSpans(found[i])) }
   return nw
 }
@@ -4792,7 +4792,7 @@ function copyHistoryArray(events, newGroup, instantiateSel) {
     copy.push({changes: newChanges})
     for (var j = 0; j < changes.length; ++j) {
       var change = changes[j], m = (void 0)
-      newChanges.push({from: change.from, to: change.to, text: change.text})
+      newChanges.push({from: change.from, to: change.to, text: change.value})
       if (newGroup) { for (var prop in change) { if (m = prop.match(/^spans_(\d+)$/)) {
         if (indexOf(newGroup, Number(m[1])) > -1) {
           lst(newChanges)[prop] = change[prop]
@@ -4991,7 +4991,7 @@ function movePos(doc, pos, dir, line) {
   if (dir < 0 && pos.ch == 0) {
     if (pos.line > doc.first) { return clipPos(doc, Pos(pos.line - 1)) }
     else { return null }
-  } else if (dir > 0 && pos.ch == (line || getLine(doc, pos.line)).text.length) {
+  } else if (dir > 0 && pos.ch == (line || getLine(doc, pos.line)).value.length) {
     if (pos.line < doc.first + doc.size - 1) { return Pos(pos.line + 1, 0) }
     else { return null }
   } else {
@@ -5011,21 +5011,21 @@ function filterChange(doc, change, update) {
     canceled: false,
     from: change.from,
     to: change.to,
-    text: change.text,
+    text: change.value,
     origin: change.origin,
     cancel: function () { return obj.canceled = true; }
   }
   if (update) { obj.update = function (from, to, text, origin) {
     if (from) { obj.from = clipPos(doc, from) }
     if (to) { obj.to = clipPos(doc, to) }
-    if (text) { obj.text = text }
+    if (text) { obj.value = text }
     if (origin !== undefined) { obj.origin = origin }
   } }
   signal(doc, "beforeChange", doc, obj)
   if (doc.cm) { signal(doc.cm, "beforeChange", doc.cm, obj) }
 
   if (obj.canceled) { return null }
-  return {from: obj.from, to: obj.to, text: obj.text, origin: obj.origin}
+  return {from: obj.from, to: obj.to, text: obj.value, origin: obj.origin}
 }
 
 // Apply a change to a document, and add it to the document's
@@ -5046,14 +5046,14 @@ function makeChange(doc, change, ignoreReadOnly) {
   var split = sawReadOnlySpans && !ignoreReadOnly && removeReadOnlyRanges(doc, change.from, change.to)
   if (split) {
     for (var i = split.length - 1; i >= 0; --i)
-      { makeChangeInner(doc, {from: split[i].from, to: split[i].to, text: i ? [""] : change.text}) }
+      { makeChangeInner(doc, {from: split[i].from, to: split[i].to, text: i ? [""] : change.value}) }
   } else {
     makeChangeInner(doc, change)
   }
 }
 
 function makeChangeInner(doc, change) {
-  if (change.text.length == 1 && change.text[0] == "" && cmp(change.from, change.to) == 0) { return }
+  if (change.value.length == 1 && change.value[0] == "" && cmp(change.from, change.to) == 0) { return }
   var selAfter = computeSelAfterChange(doc, change)
   addChangeToHistory(doc, change, selAfter, doc.cm ? doc.cm.curOp.id : NaN)
 
@@ -5164,22 +5164,22 @@ function makeChangeSingleDoc(doc, change, selAfter, spans) {
     { return operation(doc.cm, makeChangeSingleDoc)(doc, change, selAfter, spans) }
 
   if (change.to.line < doc.first) {
-    shiftDoc(doc, change.text.length - 1 - (change.to.line - change.from.line))
+    shiftDoc(doc, change.value.length - 1 - (change.to.line - change.from.line))
     return
   }
   if (change.from.line > doc.lastLine()) { return }
 
   // Clip the change to the size of this doc
   if (change.from.line < doc.first) {
-    var shift = change.text.length - 1 - (doc.first - change.from.line)
+    var shift = change.value.length - 1 - (doc.first - change.from.line)
     shiftDoc(doc, shift)
     change = {from: Pos(doc.first, 0), to: Pos(change.to.line + shift, change.to.ch),
-              text: [lst(change.text)], origin: change.origin}
+              text: [lst(change.value)], origin: change.origin}
   }
   var last = doc.lastLine()
   if (change.to.line > last) {
-    change = {from: change.from, to: Pos(last, getLine(doc, last).text.length),
-              text: [change.text[0]], origin: change.origin}
+    change = {from: change.from, to: Pos(last, getLine(doc, last).value.length),
+              text: [change.value[0]], origin: change.origin}
   }
 
   change.removed = getBetween(doc, change.from, change.to)
@@ -5212,7 +5212,7 @@ function makeChangeSingleDocInEditor(cm, change, spans) {
   updateDoc(doc, change, spans, estimateHeight(cm))
 
   if (!cm.options.lineWrapping) {
-    doc.iter(checkWidthStart, from.line + change.text.length, function (line) {
+    doc.iter(checkWidthStart, from.line + change.value.length, function (line) {
       var len = lineLength(line)
       if (len > display.maxLineLength) {
         display.maxLine = line
@@ -5228,11 +5228,11 @@ function makeChangeSingleDocInEditor(cm, change, spans) {
   doc.frontier = Math.min(doc.frontier, from.line)
   startWorker(cm, 400)
 
-  var lendiff = change.text.length - (to.line - from.line) - 1
+  var lendiff = change.value.length - (to.line - from.line) - 1
   // Remember that these lines changed, for updating the display
   if (change.full)
     { regChange(cm) }
-  else if (from.line == to.line && change.text.length == 1 && !isWholeLineUpdate(cm.doc, change))
+  else if (from.line == to.line && change.value.length == 1 && !isWholeLineUpdate(cm.doc, change))
     { regLineChange(cm, from.line, "text") }
   else
     { regChange(cm, from.line, to.line + 1, lendiff) }
@@ -5241,7 +5241,7 @@ function makeChangeSingleDocInEditor(cm, change, spans) {
   if (changeHandler || changesHandler) {
     var obj = {
       from: from, to: to,
-      text: change.text,
+      text: change.value,
       removed: change.removed,
       origin: change.origin
     }
@@ -5305,7 +5305,7 @@ function rebaseHistArray(array, from, to, diff) {
 }
 
 function rebaseHist(hist, change) {
-  var from = change.from.line, to = change.to.line, diff = change.text.length - (to - from) - 1
+  var from = change.from.line, to = change.to.line, diff = change.value.length - (to - from) - 1
   rebaseHistArray(hist.done, from, to, diff)
   rebaseHistArray(hist.undone, from, to, diff)
 }
@@ -5911,8 +5911,8 @@ Doc.prototype = createObj(BranchChunk.prototype, {
   },
   setValue: docMethodOp(function(code) {
     var top = Pos(this.first, 0), last = this.first + this.size - 1
-    makeChange(this, {from: top, to: Pos(last, getLine(this, last).text.length),
-                      text: this.splitLines(code), origin: "setValue", full: true}, true)
+    makeChange(this, {from: top, to: Pos(last, getLine(this, last).value.length),
+                      value: this.splitLines(code), origin: "setValue", full: true}, true)
     if (this.cm) { this.cm.scrollTo(0, 0) }
     setSelection(this, simpleSelection(top), sel_dontScroll)
   }),
@@ -5927,7 +5927,7 @@ Doc.prototype = createObj(BranchChunk.prototype, {
     return lines.join(lineSep || this.lineSeparator())
   },
 
-  getLine: function(line) {var l = this.getLineHandle(line); return l && l.text},
+  getLine: function(line) {var l = this.getLineHandle(line); return l && l.value},
 
   getLineHandle: function(line) {if (isLine(this, line)) { return getLine(this, line) }},
   getLineNumber: function(line) {return lineNo(line)},
@@ -6101,7 +6101,7 @@ Doc.prototype = createObj(BranchChunk.prototype, {
       n = lineNo(line)
       if (n == null) { return null }
     }
-    return {line: n, handle: line, text: line.text, gutterMarkers: line.gutterMarkers,
+    return {line: n, handle: line, text: line.value, gutterMarkers: line.gutterMarkers,
             textClass: line.textClass, bgClass: line.bgClass, wrapClass: line.wrapClass,
             widgets: line.widgets}
   },
@@ -6192,7 +6192,7 @@ Doc.prototype = createObj(BranchChunk.prototype, {
   posFromIndex: function(off) {
     var ch, lineNo = this.first, sepSize = this.lineSeparator().length
     this.iter(function (line) {
-      var sz = line.text.length + sepSize
+      var sz = line.value.length + sepSize
       if (sz > off) { ch = off; return true }
       off -= sz
       ++lineNo
@@ -6205,7 +6205,7 @@ Doc.prototype = createObj(BranchChunk.prototype, {
     if (coords.line < this.first || coords.ch < 0) { return 0 }
     var sepSize = this.lineSeparator().length
     this.iter(this.first, coords.line, function (line) { // iter aborts when callback returns a truthy value
-      index += line.text.length + sepSize
+      index += line.value.length + sepSize
     })
     return index
   },
@@ -6309,7 +6309,7 @@ function onDrop(e) {
         if (++read == n) {
           pos = clipPos(cm.doc, pos)
           var change = {from: pos, to: pos,
-                        text: cm.doc.splitLines(text.join(cm.doc.lineSeparator())),
+                        value: cm.doc.splitLines(text.join(cm.doc.lineSeparator())),
                         origin: "paste"}
           makeChange(cm.doc, change)
           setSelectionReplaceHistory(cm.doc, simpleSelection(pos, changeEnd(change)))
@@ -6613,7 +6613,7 @@ var commands = {
   singleSelection: function (cm) { return cm.setSelection(cm.getCursor("anchor"), cm.getCursor("head"), sel_dontScroll); },
   killLine: function (cm) { return deleteNearSelection(cm, function (range) {
     if (range.empty()) {
-      var len = getLine(cm.doc, range.head.line).text.length
+      var len = getLine(cm.doc, range.head.line).value.length
       if (range.head.ch == len && range.head.line < cm.lastLine())
         { return {from: range.head, to: Pos(range.head.line + 1, 0)} }
       else
@@ -6714,7 +6714,7 @@ var commands = {
     var ranges = cm.listSelections(), newSel = []
     for (var i = 0; i < ranges.length; i++) {
       if (!ranges[i].empty()) { continue }
-      var cur = ranges[i].head, line = getLine(cm.doc, cur.line).text
+      var cur = ranges[i].head, line = getLine(cm.doc, cur.line).value
       if (line) {
         if (cur.ch == line.length) { cur = new Pos(cur.line, cur.ch - 1) }
         if (cur.ch > 0) {
@@ -6722,7 +6722,7 @@ var commands = {
           cm.replaceRange(line.charAt(cur.ch - 1) + line.charAt(cur.ch - 2),
                           Pos(cur.line, cur.ch - 2), cur, "+transpose")
         } else if (cur.line > cm.doc.first) {
-          var prev = getLine(cm.doc, cur.line - 1).text
+          var prev = getLine(cm.doc, cur.line - 1).value
           if (prev) {
             cur = new Pos(cur.line, 1)
             cm.replaceRange(line.charAt(0) + cm.doc.lineSeparator() +
@@ -6766,7 +6766,7 @@ function lineStartSmart(cm, pos) {
   var line = getLine(cm.doc, start.line)
   var order = getOrder(line, cm.doc.direction)
   if (!order || order[0].level == 0) {
-    var firstNonWS = Math.max(0, line.text.search(/\S/))
+    var firstNonWS = Math.max(0, line.value.search(/\S/))
     var inWS = pos.line == start.line && pos.ch <= firstNonWS && pos.ch
     return Pos(start.line, inWS ? 0 : firstNonWS, start.sticky)
   }
@@ -7090,12 +7090,12 @@ function leftButtonSelect(cm, e, start, type, addNew) {
 
     if (type == "rect") {
       var ranges = [], tabSize = cm.options.tabSize
-      var startCol = countColumn(getLine(doc, start.line).text, start.ch, tabSize)
-      var posCol = countColumn(getLine(doc, pos.line).text, pos.ch, tabSize)
+      var startCol = countColumn(getLine(doc, start.line).value, start.ch, tabSize)
+      var posCol = countColumn(getLine(doc, pos.line).value, pos.ch, tabSize)
       var left = Math.min(startCol, posCol), right = Math.max(startCol, posCol)
       for (var line = Math.min(start.line, pos.line), end = Math.min(cm.lastLine(), Math.max(start.line, pos.line));
            line <= end; line++) {
-        var text = getLine(doc, line).text, leftPos = findColumn(text, left, tabSize)
+        var text = getLine(doc, line).value, leftPos = findColumn(text, left, tabSize)
         if (left == right)
           { ranges.push(new Range(Pos(line, leftPos), Pos(line, leftPos))) }
         else if (text.length > leftPos)
@@ -7269,7 +7269,7 @@ function defineOptions(CodeMirror) {
     var newBreaks = [], lineNo = cm.doc.first
     cm.doc.iter(function (line) {
       for (var pos = 0;;) {
-        var found = line.text.indexOf(val, pos)
+        var found = line.value.indexOf(val, pos)
         if (found == -1) { break }
         pos = found + val.length
         newBreaks.push(Pos(lineNo, found))
@@ -7606,21 +7606,21 @@ function indentLine(cm, n, how, aggressive) {
   }
 
   var tabSize = cm.options.tabSize
-  var line = getLine(doc, n), curSpace = countColumn(line.text, null, tabSize)
+  var line = getLine(doc, n), curSpace = countColumn(line.value, null, tabSize)
   if (line.stateAfter) { line.stateAfter = null }
-  var curSpaceString = line.text.match(/^\s*/)[0], indentation
-  if (!aggressive && !/\S/.test(line.text)) {
+  var curSpaceString = line.value.match(/^\s*/)[0], indentation
+  if (!aggressive && !/\S/.test(line.value)) {
     indentation = 0
     how = "not"
   } else if (how == "smart") {
-    indentation = doc.mode.indent(state, line.text.slice(curSpaceString.length), line.text)
+    indentation = doc.mode.indent(state, line.value.slice(curSpaceString.length), line.value)
     if (indentation == Pass || indentation > 150) {
       if (!aggressive) { return }
       how = "prev"
     }
   }
   if (how == "prev") {
-    if (n > doc.first) { indentation = countColumn(getLine(doc, n-1).text, null, tabSize) }
+    if (n > doc.first) { indentation = countColumn(getLine(doc, n-1).value, null, tabSize) }
     else { indentation = 0 }
   } else if (how == "add") {
     indentation = curSpace + cm.options.indentUnit
@@ -7672,11 +7672,11 @@ function applyTextInput(cm, inserted, deleted, sel, origin) {
   var textLines = splitLinesAuto(inserted), multiPaste = null
   // When pasing N lines into N selections, insert one line per selection
   if (paste && sel.ranges.length > 1) {
-    if (lastCopied && lastCopied.text.join("\n") == inserted) {
-      if (sel.ranges.length % lastCopied.text.length == 0) {
+    if (lastCopied && lastCopied.value.join("\n") == inserted) {
+      if (sel.ranges.length % lastCopied.value.length == 0) {
         multiPaste = []
-        for (var i = 0; i < lastCopied.text.length; i++)
-          { multiPaste.push(doc.splitLines(lastCopied.text[i])) }
+        for (var i = 0; i < lastCopied.value.length; i++)
+          { multiPaste.push(doc.splitLines(lastCopied.value[i])) }
       }
     } else if (textLines.length == sel.ranges.length) {
       multiPaste = map(textLines, function (l) { return [l]; })
@@ -7692,8 +7692,8 @@ function applyTextInput(cm, inserted, deleted, sel, origin) {
       if (deleted && deleted > 0) // Handle deletion
         { from = Pos(from.line, from.ch - deleted) }
       else if (cm.state.overwrite && !paste) // Handle overwrite
-        { to = Pos(to.line, Math.min(getLine(doc, to.line).text.length, to.ch + lst(textLines).length)) }
-      else if (lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == inserted)
+        { to = Pos(to.line, Math.min(getLine(doc, to.line).value.length, to.ch + lst(textLines).length)) }
+      else if (lastCopied && lastCopied.lineWise && lastCopied.value.join("\n") == inserted)
         { from = to = Pos(from.line, 0) }
     }
     updateInput = cm.curOp.updateInput
@@ -7738,7 +7738,7 @@ function triggerElectric(cm, inserted) {
           break
         } }
     } else if (mode.electricInput) {
-      if (mode.electricInput.test(getLine(cm.doc, range.head.line).text.slice(0, range.head.ch)))
+      if (mode.electricInput.test(getLine(cm.doc, range.head.line).value.slice(0, range.head.ch)))
         { indented = indentLine(cm, range.head.line, "smart") }
     }
     if (indented) { signalLater(cm, "electricInput", cm, range.head.line) }
@@ -8100,7 +8100,7 @@ function addEditorMethods(CodeMirror) {
 
     // Find the word at the given position (as returned by coordsChar).
     findWordAt: function(pos) {
-      var doc = this.doc, line = getLine(doc, pos.line).text
+      var doc = this.doc, line = getLine(doc, pos.line).value
       var start = pos.ch, end = pos.ch
       if (line) {
         var helper = this.getHelper(pos, "wordChars")
@@ -8273,7 +8273,7 @@ function findPosH(doc, pos, dir, unit, visually) {
     var helper = doc.cm && doc.cm.getHelper(pos, "wordChars")
     for (var first = true;; first = false) {
       if (dir < 0 && !moveOnce(!first)) { break }
-      var cur = lineObj.text.charAt(pos.ch) || "\n"
+      var cur = lineObj.value.charAt(pos.ch) || "\n"
       var type = isWordChar(cur, helper) ? "w"
         : group && cur == "\n" ? "n"
         : !group || /\s/.test(cur) ? null
@@ -8368,7 +8368,7 @@ ContentEditableInput.prototype.init = function (display) {
       return
     } else {
       var ranges = copyableRanges(cm)
-      setLastCopied({lineWise: true, text: ranges.text})
+      setLastCopied({lineWise: true, text: ranges.value})
       if (e.type == "cut") {
         cm.operation(function () {
           cm.setSelections(ranges.ranges, 0, sel_dontScroll)
@@ -8378,7 +8378,7 @@ ContentEditableInput.prototype.init = function (display) {
     }
     if (e.clipboardData) {
       e.clipboardData.clearData()
-      var content = lastCopied.text.join("\n")
+      var content = lastCopied.value.join("\n")
       // iOS exposes the clipboard API, but seems to discard content inserted into it
       e.clipboardData.setData("Text", content)
       if (e.clipboardData.getData("Text") == content) {
@@ -8389,7 +8389,7 @@ ContentEditableInput.prototype.init = function (display) {
     // Old-fashioned briefly-focus-a-textarea hack
     var kludge = hiddenTextarea(), te = kludge.firstChild
     cm.display.lineSpace.insertBefore(kludge, cm.display.lineSpace.firstChild)
-    te.value = lastCopied.text.join("\n")
+    te.value = lastCopied.value.join("\n")
     var hadFocus = document.activeElement
     selectInput(te)
     setTimeout(function () {
@@ -8563,7 +8563,7 @@ ContentEditableInput.prototype.pollContent = function () {
   var from = sel.from(), to = sel.to()
   if (from.ch == 0 && from.line > cm.firstLine())
     { from = Pos(from.line - 1, getLine(cm.doc, from.line - 1).length) }
-  if (to.ch == getLine(cm.doc, to.line).text.length && to.line < cm.lastLine())
+  if (to.ch == getLine(cm.doc, to.line).value.length && to.line < cm.lastLine())
     { to = Pos(to.line + 1, 0) }
   if (from.line < display.viewFrom || to.line > display.viewTo - 1) { return false }
 
@@ -8587,7 +8587,7 @@ ContentEditableInput.prototype.pollContent = function () {
 
   if (!fromNode) { return false }
   var newText = cm.doc.splitLines(domTextBetween(cm, fromNode, toNode, fromLine, toLine))
-  var oldText = getBetween(cm.doc, Pos(fromLine, 0), Pos(toLine, getLine(cm.doc, toLine).text.length))
+  var oldText = getBetween(cm.doc, Pos(fromLine, 0), Pos(toLine, getLine(cm.doc, toLine).value.length))
   while (newText.length > 1 && oldText.length > 1) {
     if (lst(newText) == lst(oldText)) { newText.pop(); oldText.pop(); toLine-- }
     else if (newText[0] == oldText[0]) { newText.shift(); oldText.shift(); fromLine++ }
@@ -8770,7 +8770,7 @@ function domToPos(cm, node, offset) {
 }
 
 function locateNodeInLineView(lineView, node, offset) {
-  var wrapper = lineView.text.firstChild, bad = false
+  var wrapper = lineView.value.firstChild, bad = false
   if (!node || !contains(wrapper, node)) { return badPos(Pos(lineNo(lineView.line), 0), true) }
   if (node == wrapper) {
     bad = true
@@ -8778,7 +8778,7 @@ function locateNodeInLineView(lineView, node, offset) {
     offset = 0
     if (!node) {
       var line = lineView.rest ? lst(lineView.rest) : lineView.line
-      return badPos(Pos(lineNo(line), line.text.length), bad)
+      return badPos(Pos(lineNo(line), line.value.length), bad)
     }
   }
 
@@ -8879,19 +8879,19 @@ TextareaInput.prototype.init = function (display) {
       if (input.inaccurateSelection) {
         input.prevInput = ""
         input.inaccurateSelection = false
-        te.value = lastCopied.text.join("\n")
+        te.value = lastCopied.value.join("\n")
         selectInput(te)
       }
     } else if (!cm.options.lineWiseCopyCut) {
       return
     } else {
       var ranges = copyableRanges(cm)
-      setLastCopied({lineWise: true, text: ranges.text})
+      setLastCopied({lineWise: true, text: ranges.value})
       if (e.type == "cut") {
         cm.setSelections(ranges.ranges, null, sel_dontScroll)
       } else {
         input.prevInput = ""
-        te.value = ranges.text.join("\n")
+        te.value = ranges.value.join("\n")
         selectInput(te)
       }
     }

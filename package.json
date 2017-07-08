@@ -8,7 +8,8 @@
     "react": "^15.5.4",
     "react-ace": "^5.0.1",
     "react-dom": "^15.5.4",
-    "react-radio-group": "^3.0.2"
+    "react-radio-group": "^3.0.2",
+    "react-simplemde-editor": "^3.6.11"
   },
   "devDependencies": {
     "react-scripts": "1.0.7",
