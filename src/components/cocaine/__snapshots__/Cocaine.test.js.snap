@@ -2,64 +2,71 @@
 
 exports[`Cocaine renders correctly 1`] = `
 <div
-  className="Cocaine"
-  style={
-    Object {
-      "display": "none",
-    }
-  }
+  className="cocaine"
+  onBlur={[Function]}
 >
   <form>
-    <p>
-      Format
-    </p>
-    <select>
-      <option
-        value="bold"
+    <input
+      autoFocus={true}
+      className="cocaine__inhaler mousetrap"
+      onChange={[Function]}
+      onKeyDown={undefined}
+      type="text"
+      value=""
+    />
+    <section
+      className="cocaine__section"
+    >
+      <p
+        className="cocaine__section-header"
       >
-        Bold
-      </option>
-      <option
-        value="italic"
+        header
+      </p>
+    </section>
+    <section
+      className="cocaine__section"
+    >
+      <p
+        className="cocaine__section-header"
       >
-        Italic
-      </option>
-      <option
-        value="strike"
+        emphasis
+      </p>
+    </section>
+    <section
+      className="cocaine__section"
+    >
+      <p
+        className="cocaine__section-header"
       >
-        Strikethrough
-      </option>
-      <option
-        value="underline"
+        blockquotes
+      </p>
+    </section>
+    <section
+      className="cocaine__section"
+    >
+      <p
+        className="cocaine__section-header"
       >
-        Underline
-      </option>
-    </select>
-    <p>
-      Headers
-    </p>
-    <select>
-      <option
-        value="h1"
+        list
+      </p>
+    </section>
+    <section
+      className="cocaine__section"
+    >
+      <div
+        className="cocaine__section-options"
       >
-        H1
-      </option>
-      <option
-        value="h2"
-      >
-        H2
-      </option>
-      <option
-        value="h3"
-      >
-        H3
-      </option>
-      <option
-        value="h4"
-      >
-        H4
-      </option>
-    </select>
+        <label
+          className="cocaine__hidden-option"
+        >
+          <input
+            name="headers"
+            onChange={[Function]}
+            type="radio"
+          />
+        </label>
+      </div>
+    </section>
   </form>
 </div>
 `;

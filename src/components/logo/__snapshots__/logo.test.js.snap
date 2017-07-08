@@ -2,6 +2,7 @@
 
 exports[`Logo renders correctly 1`] = `
 <img
-  src="logo.png"
+  alt={Object {}}
+  src="head.svg"
 />
 `;
