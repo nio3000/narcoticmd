@@ -69,31 +69,27 @@ export class Druggy extends Component {
     this.handleCocaineBlur = this.handleCocaineBlur.bind(this);
     this.onChange = this.onChange.bind(this);
     this.formatOption = this.formatOption.bind(this);
+    this.deleteSelection = this.deleteSelection.bind(this);
+    this.takeCocaineAway = this.takeCocaineAway.bind(this);
   }
 
   componentDidMount() {
-    //Assume that selection is done if user release the shift key
-    // Mousetrap.bind('shift', this.giveMeCocaine, 'keyup');
-    Mousetrap.bind('backspace', this.deleteSelection)
-  }
-  componentWillUnmount() {
-    // Mousetrap.unbind('shift', this.giveMeCocaine, 'keyup')
+    Mousetrap.bind('escape', this.takeCocaineAway);
   }
 
+  /**
+   * Display Cocaine
+   */
   giveMeCocaine() {
     //Show Cocaine only when text is already selected
     if(this.state.selectedText === "") return;
+    Mousetrap.bind('backspace', this.deleteSelection)
     this.setState({
       showCocaine: true
     })
   }
 
   extraKeys = {
-    // Up: (cm) => {
-    //   // cm.replaceSelection("");
-    //   // this.editor.simplemde['toggleBold']();
-    //   // this.editor;
-    // },
     "Shift": (cm) => {
       if (cm.getSelection()) {
         this.giveMeCocaine();
@@ -101,8 +97,19 @@ export class Druggy extends Component {
     }
   };
 
+
   /**
-   * map format option choosen in Cocaine to name required by editor
+   * Unmount Cocaine
+   */
+  takeCocaineAway() {
+    this.setState({
+      showCocaine: false
+    });
+    this.editor.simplemde.codemirror.focus();
+  }
+
+  /**
+   * Map format option choosen in Cocaine to name required by SimpleMDE editor
    * @param format string
    *
    * TODO: Unit test
@@ -139,28 +146,28 @@ export class Druggy extends Component {
     if(this.formatOption( format )) {
       this.editor.simplemde[this.formatOption(format)]();
     }
-    this.setState({
-      showCocaine: false,
-    });
+    this.takeCocaineAway();
+    Mousetrap.unbind('backspace', this.deleteSelection)
     //Clear selection by set cursor at the end of selected text
     this.editor.simplemde.codemirror.setCursor(this.editor.simplemde.codemirror.getCursor(false));
-    this.editor.simplemde.codemirror.focus();
   }
 
   handleCocaineBlur() {
+    this.takeCocaineAway();
+  }
+
+  deleteSelection() {
+    this.editor.simplemde.codemirror.replaceSelection('');
     this.setState({
       showCocaine: false
-    });
+    })
   }
 
   onChange( value ) {
-    // console.log('vaalue!', this.editor.simplemde.__codemirror.getSelection());
     if(this.editor.simplemde.codemirror.somethingSelected()) {
      const showCocaine =  setInterval(() => {
        clearInterval( showCocaine );
        this.giveMeCocaine();
-       console.log('Zaznaczone!');
-
       }, 1000);
 
     }
@@ -184,7 +191,9 @@ export class Druggy extends Component {
           options={
             {
               autofocus: true,
-              spellChecker: true
+              spellChecker: false,
+              indentWithTabs: false,
+              toolbar: ["bold", "italic", "|", "heading-1", "heading-2", "heading-3", "|", "unordered-list", "ordered-list", "link", "image", "|", "code", "quote"],
             }
           }
           extraKeys={this.extraKeys}
