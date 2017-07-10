@@ -28,15 +28,28 @@ class Cocaine extends Component {
 
   handleShortcut(event) {
     let key = event.target.value.toLocaleLowerCase();
-    if (!this.state.choosenPortion) {
+    //Choose group
+    let choosenPortion = this.props.portion.find((item) => item.key === key);
+    //Prevent from reaction for undefined key
+    if ( choosenPortion && !this.state.choosenPortion ) {
       this.setState({
-        choosenPortion: this.props.portion.find((item) => item.key === key)
+        choosenPortion: choosenPortion
       });
+      //TODO test
+      //Return format if there is only one option (e.g. blockquote)
+      if(choosenPortion.options.length === 1) {
+        console.log(choosenPortion);
+        this.props.onChooseFormat( choosenPortion.options[0].format );
+        this.setState({
+          key
+        })
+      }
 
-
-    } else {
+    }
+    else if ( this.state.choosenPortion ) {
+      // Choose formatting option
       let option = this.state.choosenPortion.options.find((item) => item.key === key);
-      if(!option) {
+      if( !option ) {
         this.props.onChooseFormat(null);
         return;
       }
@@ -77,7 +90,14 @@ class Cocaine extends Component {
     return (
       <div className="cocaine" onBlur={this.onBlur}>
         <form>
-          <input type="text" onChange={this.handleShortcut} onKeyDown={this.resetKey} className="cocaine__inhaler mousetrap" autoFocus value={this.state.key}/>
+          <input
+            type="text"
+            onChange={this.handleShortcut}
+            onKeyDown={this.resetKey}
+            className="cocaine__inhaler mousetrap"
+            value={this.state.key}
+            autoFocus
+          />
 
           {this.props.portion.map( item =>
             <section className="cocaine__section" key={item.key}>
@@ -98,20 +118,6 @@ class Cocaine extends Component {
     );
   }
 }
-
-
-
-export let style = {
-  visible: {
-    display: 'block'
-  },
-  hidden: {
-    display: 'none'
-  },
-  checked: {
-    background: "FF9E7C"
-  }
-};
 
 
 export default Cocaine;

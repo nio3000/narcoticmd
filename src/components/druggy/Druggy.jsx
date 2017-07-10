@@ -5,6 +5,13 @@ import SimpleMDE from 'react-simplemde-editor';
 
 require("react-simplemde-editor/dist/simplemde.min.css");
 
+/**
+ * key: key on keyboard
+ * name: name of the function displayed in Cocaine for user
+ * format: function code returned to Druggy component
+ *
+ * @type {[*]}
+ */
 const portion = [
   {
     name: 'header',
@@ -28,15 +35,22 @@ const portion = [
     name: 'blockquotes',
     key: 'q',
     options: [
-      { name: 'quotation', key: 'q', format: '> {STR}' }
+      { name: 'quotation', key: 'q', format: 'blockquotes' }
+    ]
+  },
+  {
+    name: 'codeblock',
+    key: 'c',
+    options: [
+      { name: 'code', key: 'c', format: 'codeblock' }
     ]
   },
   {
     name: 'list',
     key: 'l',
     options: [
-      { name: 'ordered', key: 'o', format: '1. {STR}' },
-      { name: 'unordered', key: 'u', format: '* {STR}' },
+      { name: 'ordered', key: 'o', format: 'orderedlist' },
+      { name: 'unordered', key: 'u', format: 'unorderedlist' },
     ]
   }
 ];
@@ -135,6 +149,12 @@ export class Druggy extends Component {
       case 'h3':
         functionName = 'toggleHeading3';
         break;
+      case 'blockquotes':
+        functionName = 'toggleBlockquote';
+        break;
+      case 'codeblock':
+        functionName = 'toggleCodeBlock';
+        break;
       default:
         functionName = null;
     }
@@ -153,7 +173,7 @@ export class Druggy extends Component {
   }
 
   handleCocaineBlur() {
-    this.takeCocaineAway();
+    // this.takeCocaineAway();
   }
 
   deleteSelection() {
@@ -186,7 +206,6 @@ export class Druggy extends Component {
       <div className="Druggy" style={style.container}>
         {cocaine}
         <SimpleMDE
-          // value={this.state.value}
           onChange={this.onChange}
           options={
             {
