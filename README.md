@@ -1,6 +1,9 @@
 > Markdown editor for all md-addcited who want to write text fast. 
 > No mouse, only efficient keyboard shortcuts 
 
+## Demo
+Play with [Narcotic Mardown Editor demo](https://fadehelix.github.io/narcoticmd).
+
 ## The short story
 I like what Terry Pratchett callled in one book of his  "The Science of Discworld" sub-series: The narrativum. This element ensure everyone that everything what happens is accordant to the story.
 So, let me show you a short tale:
@@ -15,23 +18,25 @@ I dont't know anything about this library. I need to learn fast. I need coffee. 
 Will he write the post and send it to the Jack befere the cops come into his flat?
 
 
-## Components
-### Dealer
-__Text editor area__
+## Already working components:
+### Druggy
+The Single Source of Truth. Container for SimpleMDE and all other drugs... i mean components.
+
 ### Cocaine
-__Popup container for formatting options.__    
+__Popup which appear when text is selected. It contains all most popular formatting options.__    
 User can choose option just by pressing any key (`b` for bold selected text, `u` for underline, `l` for link)
 * _Cocaine_ - popup with formatting options.
-* _Cocaine_ - keyboard shortcuts like __b__, __i__, __s__ - only letters
-* _Cocaine__ - close by __shift__
-* Double __shift__ - enable cocaine without onSelect.
+* _Cocaine_ - keyboard shortcuts like __b__, __i__, __s__ - only letters,
+* _Cocaine__ - close by ~~__shift__~~ or __escape__,
+* ~~Double __shift__ - enable cocaine without onSelect.~~
 
+## To be implemented:
 ### Extasy
 __Adnotation for text__ (For examle when I'm writting about emulator and I need to check the infromation, or research more)
 
 ### Police
 __Preview output html__
-* Add markdown-to-html parser - preview feature.
+* Extend preview feature in SimpleMDE
 
 ### Joint 
 __Configuration in JSON__
@@ -46,5 +51,11 @@ __Configuration in JSON__
 Icons:
  * [Gregor Cresnar](http://www.flaticon.com/authors/gregor-cresnar) from [flaticon.com](http://www.flaticon.com)
  
+Libraries:
+ * [SimpleMDE editor](https://simplemde.com/) and related react component [react-simplemde-editor](https://github.com/benrlodge/react-simplemde-editor),
+ * [Mousetrap](https://craig.is/killing/mice) - awesome pure js library for handling keyboard events.
+ * [React](https://facebook.github.io/react/) and [create-react-app](https://github.com/facebookincubator/create-react-app)
+
+ 
 ## License
-[MIT]()
+MIT
