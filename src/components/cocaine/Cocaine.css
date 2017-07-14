@@ -1,5 +1,5 @@
 .cocaine {
-  background: #222;
+  background: #555;
   border: 1px solid #555;
   -webkit-border-radius: 10px;
   -webkit-border-top-left-radius: 0;
@@ -17,6 +17,25 @@
 
   left: 600px;
 }
+
+.cocaine:before {
+  width: 0;
+  height: 0;
+  /* Draw triangle */
+  border-bottom: 40px solid #555;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+
+  display: block;
+  content: " ";
+  position: absolute;
+  -webkit-transform: rotate(-40deg) translateX(0px) translateY(-35px);
+  transform: rotate(-40deg) translateX(0px) translateY(-35px);
+  z-index: -1;
+}
+
+
+
 .cocaine * {
   box-sizing: border-box;
 }

@@ -84,7 +84,7 @@ class Cocaine extends Component {
       );
     }
     return (
-      <div className="cocaine" onBlur={this.onBlur} style={{left: this.props.position.left, top: this.props.position.bottom + 60}}>
+      <div className="cocaine" onBlur={this.onBlur} style={{left: this.props.position.left, top: this.props.position.bottom + 75}}>
         <form>
           <input
             type="text"
