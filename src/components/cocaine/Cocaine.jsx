@@ -64,7 +64,7 @@ class Cocaine extends Component {
    */
   onBlur() {
     //Comment this out for inspection purpose
-    // this.props.onBlur();
+    this.props.onBlur();
   }
 
   markShortcut() {
