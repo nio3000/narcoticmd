@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "brace": "^0.10.0",
+    "gh-pages": "^1.0.0",
     "mousetrap": "^1.6.1",
     "react": "^15.5.4",
     "react-ace": "^5.0.1",
@@ -16,9 +17,12 @@
     "react-test-renderer": "^15.5.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "homepage": "https://fadehelix.github.io/narcoticmd"
 }
