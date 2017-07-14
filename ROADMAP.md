@@ -4,16 +4,16 @@
 * Druggy component
 * Working Cocaine with basic formatting options
 
-### 0.2.0 - Style
-* On Druggy focus fade everything other.
+### 0.2.0 - Improvements and refactoring
 * [Add CSS Modules](https://medium.com/nulogy/how-to-use-css-modules-with-create-react-app-9e44bec2b5c2)
+* propTypes
+* Basic tests with Jest and Enzyme
 
-### 0.3.0
-* Add Police
-
-### 0.4.0
+### 0.3.0 - Cocaine on demand
 * Add Call - double shift for call custom Cocaine without any selected text
-* Save text in Dealer into browser local storage
+
+### 0.4.0 - Autosave 
+* Save text in browser local storage
 
 ## 1.0.0 - Working editor with preview
 

@@ -30,15 +30,14 @@ class Cocaine extends Component {
     let key = event.target.value.toLocaleLowerCase();
     //Choose group
     let choosenPortion = this.props.portion.find((item) => item.key === key);
-    //Prevent from reaction for undefined key
+    //If key is undefined do nothing
     if ( choosenPortion && !this.state.choosenPortion ) {
       this.setState({
         choosenPortion: choosenPortion
       });
       //TODO test
-      //Return format if there is only one option (e.g. blockquote)
+      //Return format if there is only one option (e.g. blockquote or codeblock)
       if(choosenPortion.options.length === 1) {
-        console.log(choosenPortion);
         this.props.onChooseFormat( choosenPortion.options[0].format );
         this.setState({
           key
@@ -61,18 +60,15 @@ class Cocaine extends Component {
   }
 
   /**
-   * Replace first occurence of shortcut in formatting option name
-   * @param option string
-   */
-  displayShortcut( option ) {
-    //
-  }
-
-  /**
    * Change Cocaine visible state in parent component
    */
   onBlur() {
-    this.props.onBlur();
+    //Comment this out for inspection purpose
+    // this.props.onBlur();
+  }
+
+  markShortcut() {
+
   }
 
   render() {
@@ -83,12 +79,12 @@ class Cocaine extends Component {
           key={item.key}
           className="cocaine__label"
         >
-          <Radio value={item.key}/>{item.name}
+          <Radio value={item.key}/><span className="cocaine__keymark">{item.key}</span>{item.name}
         </label>
       );
     }
     return (
-      <div className="cocaine" onBlur={this.onBlur}>
+      <div className="cocaine" onBlur={this.onBlur} style={{left: this.props.position.left, top: this.props.position.bottom + 60}}>
         <form>
           <input
             type="text"
@@ -99,11 +95,25 @@ class Cocaine extends Component {
             autoFocus
           />
 
-          {this.props.portion.map( item =>
-            <section className="cocaine__section" key={item.key}>
-              <p className="cocaine__section-header">{ item.name }</p>
-            </section>
-          )}
+          {this.props.portion.filter( item => {
+            if (this.state.choosenPortion) {
+              return item.key === this.state.choosenPortion.key;
+            } else {
+              return item;
+            }
+          }).map( item => {
+            let keymark = <span className="cocaine__keymark">{item.key}</span>;
+            if(this.state.choosenPortion) {
+              keymark = null;
+            }
+            return(
+               <section className="cocaine__section" key={item.key}>
+                <p className="cocaine__section-header">{keymark} { item.name}
+                </p>
+                {/*<p className="cocaine__section-header"><span className="cocaine__keymark">E</span></p>*/}
+              </section>
+            )
+          })}
           <section className="cocaine__section">
           <RadioGroup
             name="headers"
@@ -118,6 +128,5 @@ class Cocaine extends Component {
     );
   }
 }
-
 
 export default Cocaine;

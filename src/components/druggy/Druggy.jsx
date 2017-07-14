@@ -26,9 +26,9 @@ const portion = [
     name: 'emphasis',
     key: 'e',
     options: [
-      {key: 'b', name: 'b', format: 'bold'},
-      {key: 'i', name: 'i', format: 'italic'},
-      {key: 's', name: 's', format: 'strike'}
+      {key: 'b', name: 'bold', format: 'bold'},
+      {key: 'i', name: 'italic', format: 'italic'},
+      {key: 's', name: 'strike', format: 'strike'}
     ]
   },
   {
@@ -52,7 +52,14 @@ const portion = [
       { name: 'ordered', key: 'o', format: 'orderedlist' },
       { name: 'unordered', key: 'u', format: 'unorderedlist' },
     ]
-  }
+  },
+  {
+    name: 'link',
+    key: 'i',
+    options: [
+      { name: 'link', key: 'i', format: 'link' }
+    ]
+  },
 ];
 //TODO
 // Links                               | U
@@ -75,7 +82,8 @@ export class Druggy extends Component {
       selectedText: null,
       selectionStart: 0,
       selectionEnd: 0,
-      value: ""
+      value: "",
+      cursorPosition: {left:0, right: 0, top: 0, bottom: 0}
     };
 
     this.handleChooseFormat = this.handleChooseFormat.bind(this);
@@ -85,10 +93,16 @@ export class Druggy extends Component {
     this.formatOption = this.formatOption.bind(this);
     this.deleteSelection = this.deleteSelection.bind(this);
     this.takeCocaineAway = this.takeCocaineAway.bind(this);
+
+    //Editor
+    this.simplemde = '';
+    this.codemirror = '';
   }
 
   componentDidMount() {
     Mousetrap.bind('escape', this.takeCocaineAway);
+    this.simplemde = this.editor.simplemde;
+    this.codemirror = this.editor.simplemde.codemirror;
   }
 
   /**
@@ -98,11 +112,16 @@ export class Druggy extends Component {
     //Show Cocaine only when text is already selected
     if(this.state.selectedText === "") return;
     Mousetrap.bind('backspace', this.deleteSelection)
+    let cPos = this.codemirror.cursorCoords(false, 'local');
     this.setState({
-      showCocaine: true
+      showCocaine: true,
+      cursorPosition: cPos
     })
   }
 
+  /**
+   * Key event handled by SimpleMDE
+   */
   extraKeys = {
     "Shift": (cm) => {
       if (cm.getSelection()) {
@@ -119,7 +138,7 @@ export class Druggy extends Component {
     this.setState({
       showCocaine: false
     });
-    this.editor.simplemde.codemirror.focus();
+    this.codemirror.focus();
   }
 
   /**
@@ -155,6 +174,15 @@ export class Druggy extends Component {
       case 'codeblock':
         functionName = 'toggleCodeBlock';
         break;
+      case 'orderedlist':
+        functionName = 'toggleOrderedList';
+        break;
+      case 'unorderedlist':
+        functionName = 'toggleUnorderedList';
+        break;
+      case 'link':
+        functionName = 'drawLink';
+        break;
       default:
         functionName = null;
     }
@@ -173,20 +201,18 @@ export class Druggy extends Component {
   }
 
   handleCocaineBlur() {
-    // this.takeCocaineAway();
+    this.takeCocaineAway();
   }
 
+  //TODO: TEST if focus is set on the editor after delete text
   deleteSelection() {
     this.editor.simplemde.codemirror.replaceSelection('');
-    this.setState({
-      showCocaine: false
-    })
+    this.takeCocaineAway();
   }
 
   onChange( value ) {
     if(this.editor.simplemde.codemirror.somethingSelected()) {
-     const showCocaine =  setInterval(() => {
-       clearInterval( showCocaine );
+     setTimeout(() => {
        this.giveMeCocaine();
       }, 1000);
 
@@ -200,12 +226,13 @@ export class Druggy extends Component {
   render() {
     let cocaine = null;
     if(this.state.showCocaine) {
-      cocaine = <Cocaine visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} onBlur={this.handleCocaineBlur} />
+      cocaine = <Cocaine visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} onBlur={this.handleCocaineBlur} position={this.state.cursorPosition}/>
     }
     return (
       <div className="Druggy" style={style.container}>
         {cocaine}
         <SimpleMDE
+          // value={this.state.value}
           onChange={this.onChange}
           options={
             {
@@ -229,6 +256,7 @@ export const style = {
   container: {
     height: '70%',
     margin: 'auto',
+    position: 'relative',
     width: '80%'
   },
 };
