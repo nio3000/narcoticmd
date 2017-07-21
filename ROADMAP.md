@@ -1,13 +1,14 @@
 #Release plan
 ## Init
-### 0.1.0  - MVP 
-* Druggy component
-* Working Cocaine with basic formatting options
+### 0.1.0  - MVP > Current
+* ~~Druggy component~~
+* ~~Working Cocaine with basic formatting options~~
 
 ### 0.2.0 - Improvements and refactoring
 * [Add CSS Modules](https://medium.com/nulogy/how-to-use-css-modules-with-create-react-app-9e44bec2b5c2)
 * propTypes
 * Basic tests with Jest and Enzyme
+* Add [Flow](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-flow)
 
 ### 0.3.0 - Cocaine on demand
 * Add Call - double shift for call custom Cocaine without any selected text
