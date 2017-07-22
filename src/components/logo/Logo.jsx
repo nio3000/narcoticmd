@@ -1,8 +1,8 @@
 import React from 'react';
-import LogoImage from './img/head.svg';
+import LogoImage from './img/logo.svg';
 const Logo = ( alt="Nacotic logo" )  => {
   return(
-    <img src={LogoImage} alt={alt} />
+    <img src={LogoImage} alt={alt} className="logo__image" />
   );
 };
 
