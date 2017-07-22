@@ -8,7 +8,7 @@ import renderer from 'react-test-renderer';
 describe( 'Logo', () => {
   it('renders correctly', () => {
     const component = renderer.create(
-      <Logo />
+      <Logo alt="Logo"/>
     );
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();

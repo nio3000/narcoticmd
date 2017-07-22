@@ -4,10 +4,16 @@ import renderer from 'react-test-renderer';
 import Subtitle from './Subtitle';
 
 describe('Subtitle', () => {
-  test('renders correctly', () => {
+  it('renders correctly', () => {
     const component = renderer.create(
-      <Subtitle />
+      <Subtitle value="Editor for markdown-addicted writers"/>
     );
     expect( component.toJSON() ).toMatchSnapshot();
   });
+  it('doesn\'t render if its value is empty', () => {
+    const component = renderer.create(
+      <Subtitle value=""/>
+    );
+    expect( component.toJSON() ).toMatchSnapshot();
+  })
 });

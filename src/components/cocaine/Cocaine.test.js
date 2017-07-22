@@ -2,7 +2,7 @@ import React from 'react';
 import Cocaine from './Cocaine';
 import renderer from 'react-test-renderer';
 
-const portion = [
+const portionMock = [
   {
     name: 'header',
     key: 'h',
@@ -39,9 +39,9 @@ const portion = [
 ];
 
 describe('Cocaine', () => {
-  test('renders correctly', () => {
+  it('renders correctly on hardcoded position', () => {
    const component = renderer.create(
-     <Cocaine portion={portion} />
+     <Cocaine portion={portionMock} position={{left:0, right: 0, top: 0, bottom: 0}} onBlur={jest.fn()}/>
    );
    let tree = component.toJSON();
    expect(tree).toMatchSnapshot();

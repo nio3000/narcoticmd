@@ -2,8 +2,8 @@
 
 exports[`Logo renders correctly 1`] = `
 <img
-  alt={Object {}}
+  alt="Logo"
   className="logo__image"
-  src="head.svg"
+  src="logo.svg"
 />
 `;
