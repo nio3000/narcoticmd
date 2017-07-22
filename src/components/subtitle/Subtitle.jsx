@@ -1,6 +1,11 @@
 import React from 'react';
-import './Subtitle.css';
-const Subtitle = ( value ) =>
-    <h2 className="subtitle">Editor for markdown-addicted writers</h2>;
+import PropTypes from 'prop-types';
 
+import './Subtitle.css';
+const Subtitle = ({ value }) =>
+    !!value && <h2 className="subtitle">{ value }</h2>;
+
+Subtitle.propTypes = {
+  value: PropTypes.node
+};
 export default Subtitle;

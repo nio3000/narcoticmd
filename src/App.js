@@ -9,8 +9,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Logo />
-        <Subtitle />
+        <Logo alt="Logo"/>
+        <Subtitle value="Editor for markdown-addicted writers"/>
         <Druggy />
       </div>
     );

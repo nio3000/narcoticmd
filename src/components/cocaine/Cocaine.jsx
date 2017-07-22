@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { RadioGroup, Radio } from 'react-radio-group';
+import PropTypes from 'prop-types';
 import './Cocaine.css';
 
 
@@ -128,5 +129,20 @@ class Cocaine extends Component {
     );
   }
 }
+
+//visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} onBlur={this.handleCocaineBlur} position={this.state.cursorPosition
+
+Cocaine.defaultProps = {
+  visible: false,
+  position: {left:0, right: 0, top: 0, bottom: 0}
+};
+
+Cocaine.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onChooseFormat: PropTypes.func,
+  portion: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onBlur: PropTypes.func,
+  position: PropTypes.objectOf(PropTypes.number).isRequired
+};
 
 export default Cocaine;

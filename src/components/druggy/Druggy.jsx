@@ -62,9 +62,7 @@ const portion = [
   },
 ];
 //TODO
-// Links                               | U
 // Images                              | I
-// Code and Syntax Highlighting        | C
 // Tables                              | T
 // Inline HTML                         | ???
 //   Horizontal Rule                     | R
