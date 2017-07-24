@@ -1,4 +1,6 @@
+[![Build Status](https://travis-ci.org/fadehelix/narcoticmd.svg?branch=master)](https://travis-ci.org/fadehelix/narcoticmd) 
 [![Greenkeeper badge](https://badges.greenkeeper.io/fadehelix/narcoticmd.svg)](https://greenkeeper.io/)
+
 
 
 > Markdown editor for all md-addcited who want to write text fast. 
