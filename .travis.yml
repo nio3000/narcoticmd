@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   - 8
-cache:
-  directories:
-    - node_modules
+#cache:
+#  directories:
+#    - node_modules
 #before_install:
   # package-lock.json was introduced in npm@5
   #  - npm install -g npm@5
