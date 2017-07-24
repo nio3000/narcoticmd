@@ -1,5 +1,7 @@
 import React from 'react';
 import Cocaine from './Cocaine';
+import { Radio } from 'react-radio-group';
+import {mount, shallow} from 'enzyme';
 import renderer from 'react-test-renderer';
 
 const portionMock = [
@@ -41,13 +43,36 @@ const portionMock = [
 describe('Cocaine', () => {
   it('renders correctly on hardcoded position', () => {
    const component = renderer.create(
-     <Cocaine portion={portionMock} position={{left:0, right: 0, top: 0, bottom: 0}} onBlur={jest.fn()}/>
+     <Cocaine portion={portionMock} position={{left:0, right: 0, top: 0, bottom: 0}}/>
    );
    let tree = component.toJSON();
    expect(tree).toMatchSnapshot();
+  });
+
+  it('inhaler has focus', () => {
+    const cocaine = mount(
+      <Cocaine visible={true} portion={portionMock} position={{left:0, right: 0, top: 0, bottom: 0}}/>
+    );
+    const inhaler = cocaine.find('.cocaine__inhaler');
+    expect(inhaler.matchesElement(document.activeElement)).toBeTruthy()
+  });
+
+  it('renders h1 option if user press "h" key', () => {
+    const component = mount(
+      <Cocaine portion={portionMock} position={{left:0, right: 0, top: 0, bottom: 0}}/>
+    );
+    const inhaler = component.find('.cocaine__inhaler');
+    inhaler.simulate('change', { target: {value: 'h'}});
+    let h1 = component.find("label").at(0);
+    expect(h1.text()).toBe("1h1");
+
+  });
+  xit('Do nothing when user press key not assigned to any group', () => {
+    const component = mount(
+      <Cocaine portion={portionMock} position={{left:0, right: 0, top: 0, bottom: 0}}/>
+    );
+    const inhaler = component.find('.cocaine__inhaler');
+    inhaler.simulate('change', { target: {value: '.'}});
   })
+
 });
-
-//Hide on blur
-
-//Allow to delete selected text (x key in cocaine?)
