@@ -4,12 +4,12 @@ node_js:
 cache:
   directories:
     - node_modules
-before_install:
+#before_install:
   # package-lock.json was introduced in npm@5
-  - npm install -g npm@5
-  - npm install -g greenkeeper-lockfile@1
-before_script: greenkeeper-lockfile-update
-after_script: greenkeeper-lockfile-upload
+  #  - npm install -g npm@5
+  #  - npm install -g greenkeeper-lockfile@1
+  #before_script: greenkeeper-lockfile-update
+  #after_script: greenkeeper-lockfile-upload
 script:
   - npm run build
   - npm test

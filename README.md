@@ -2,7 +2,6 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/fadehelix/narcoticmd.svg)](https://greenkeeper.io/)
 [![Dependencies status](https://david-dm.org/fadehelix/narcoticmd/master/status.svg)](https://david-dm.org/fadehelix/narcoticmd/master)
 [![Dev dependencies status](https://david-dm.org/fadehelix/narcoticmd/master/dev-status.svg)](https://david-dm.org/fadehelix/narcoticmd/master?type=dev)
-![https://api.travis-ci.org/fadehelix/narcoticmd.svg](https://travis-ci.org/fadehelix/narcoticmd)
 
 
 > Markdown editor for all md-addcited who want to write text fast. 
