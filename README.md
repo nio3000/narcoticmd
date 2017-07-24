@@ -1,3 +1,6 @@
+[![Greenkeeper badge](https://badges.greenkeeper.io/fadehelix/narcoticmd.svg)](https://greenkeeper.io/)
+
+
 > Markdown editor for all md-addcited who want to write text fast. 
 > No mouse, only efficient keyboard shortcuts 
 
