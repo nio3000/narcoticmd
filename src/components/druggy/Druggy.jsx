@@ -89,8 +89,8 @@ export class Druggy extends Component {
     this.handleCocaineBlur = this.handleCocaineBlur.bind(this);
     this.onChange = this.onChange.bind(this);
     this.formatOption = this.formatOption.bind(this);
-    this.deleteSelection = this.deleteSelection.bind(this);
     this.takeCocaineAway = this.takeCocaineAway.bind(this);
+    this.setFocusOnEditor = this.setFocusOnEditor.bind(this);
 
     //Editor
     this.simplemde = '';
@@ -101,19 +101,19 @@ export class Druggy extends Component {
     Mousetrap.bind('escape', this.takeCocaineAway);
     this.simplemde = this.editor.simplemde;
     this.codemirror = this.editor.simplemde.codemirror;
+
+    this.editor.simplemde.element.classList.add('mousetrap');
   }
 
   /**
    * Display Cocaine
    */
   giveMeCocaine() {
-    //Show Cocaine only when text is already selected
-    if(this.state.selectedText === "") return;
-    Mousetrap.bind('backspace', this.deleteSelection)
-    let cPos = this.codemirror.cursorCoords(false, 'local');
+    if (!this.editor.simplemde.codemirror.somethingSelected()) return;
+    let cursorPos = this.codemirror.cursorCoords(false, 'local');
     this.setState({
       showCocaine: true,
-      cursorPosition: cPos
+      cursorPosition: cursorPos
     })
   }
 
@@ -121,10 +121,8 @@ export class Druggy extends Component {
    * Key event handled by SimpleMDE
    */
   extraKeys = {
-    "Shift": (cm) => {
-      if (cm.getSelection()) {
+    "Tab": (cm) => {
         this.giveMeCocaine();
-      }
     }
   };
 
@@ -136,6 +134,10 @@ export class Druggy extends Component {
     this.setState({
       showCocaine: false
     });
+    this.setFocusOnEditor()
+  }
+
+  setFocusOnEditor() {
     this.codemirror.focus();
   }
 
@@ -193,7 +195,6 @@ export class Druggy extends Component {
       this.editor.simplemde[this.formatOption(format)]();
     }
     this.takeCocaineAway();
-    Mousetrap.unbind('backspace', this.deleteSelection)
     //Clear selection by set cursor at the end of selected text
     this.editor.simplemde.codemirror.setCursor(this.editor.simplemde.codemirror.getCursor(false));
   }
@@ -202,20 +203,7 @@ export class Druggy extends Component {
     this.takeCocaineAway();
   }
 
-  //TODO: TEST if focus is set on the editor after delete text
-  deleteSelection() {
-    this.editor.simplemde.codemirror.replaceSelection('');
-    this.takeCocaineAway();
-  }
-
-  onChange( value ) {
-    if(this.editor.simplemde.codemirror.somethingSelected()) {
-     setTimeout(() => {
-       this.giveMeCocaine();
-      }, 1000);
-
-    }
-
+  onChange( value) {
     this.setState({
       value: value
     })
