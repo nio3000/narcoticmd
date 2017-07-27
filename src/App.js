@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <div className="App">
         <Logo alt="Logo"/>
-        <Subtitle value="Editor for markdown-addicted writers"/>
+        <Subtitle value="Keyboard driven markdown editor"/>
         <Druggy />
       </div>
     );
