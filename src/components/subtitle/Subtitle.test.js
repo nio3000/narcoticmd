@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 
 import Subtitle from './Subtitle';
 
-describe('Subtitle', () => {
+describe('Snapshot', () => {
   it('renders correctly', () => {
     const component = renderer.create(
       <Subtitle value="Editor for markdown-addicted writers"/>

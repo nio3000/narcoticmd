@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Subtitle doesn't render if its value is empty 1`] = `null`;
+exports[`Snapshot doesn't render if its value is empty 1`] = `null`;
 
-exports[`Subtitle renders correctly 1`] = `
+exports[`Snapshot renders correctly 1`] = `
 <h2
   className="subtitle"
 >

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Cocaine renders correctly on hardcoded position 1`] = `
+exports[`Snapshot:  renders correctly on hardcoded position 1`] = `
 <div
   className="cocaine"
   onBlur={[Function]}
@@ -74,10 +74,40 @@ exports[`Cocaine renders correctly on hardcoded position 1`] = `
         <span
           className="cocaine__keymark"
         >
+          c
+        </span>
+         
+        codeblock
+      </p>
+    </section>
+    <section
+      className="cocaine__section"
+    >
+      <p
+        className="cocaine__section-header"
+      >
+        <span
+          className="cocaine__keymark"
+        >
           l
         </span>
          
         list
+      </p>
+    </section>
+    <section
+      className="cocaine__section"
+    >
+      <p
+        className="cocaine__section-header"
+      >
+        <span
+          className="cocaine__keymark"
+        >
+          i
+        </span>
+         
+        link
       </p>
     </section>
     <section
