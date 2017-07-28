@@ -13,6 +13,7 @@
     "react-simplemde-editor": "^3.6.11"
   },
   "devDependencies": {
+    "coveralls": "^2.13.1",
     "enzyme": "^2.9.1",
     "react-scripts": "1.0.10",
     "react-test-renderer": "^15.6.1"
