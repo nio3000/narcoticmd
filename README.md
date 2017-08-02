@@ -2,7 +2,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/fadehelix/narcoticmd.svg)](https://greenkeeper.io/)
 [![Dependencies status](https://david-dm.org/fadehelix/narcoticmd/master/status.svg)](https://david-dm.org/fadehelix/narcoticmd/master)
 [![Dev dependencies status](https://david-dm.org/fadehelix/narcoticmd/master/dev-status.svg)](https://david-dm.org/fadehelix/narcoticmd/master?type=dev)
-
+[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 
 > Markdown editor for all md-addcited who want to write text fast. 
 > No mouse, only efficient keyboard shortcuts 
@@ -15,12 +15,8 @@ Play with [Narcotic Mardown Editor demo](https://fadehelix.github.io/narcoticmd)
 The Single Source of Truth. Container for SimpleMDE and all other drugs... i mean components.
 
 ### Cocaine
-__Popup which appear when text is selected. It contains all most popular formatting options.__    
-User can choose option just by pressing any key (`b` for bold selected text, `u` for underline, `l` for link)
-* _Cocaine_ - popup with formatting options.
-* _Cocaine_ - keyboard shortcuts like __b__, __i__, __s__ - only letters,
-* _Cocaine__ - close by ~~__shift__~~ or __escape__,
-* ~~Double __shift__ - enable cocaine without onSelect.~~
+__Popup which appear when text is selected and you hit Tab. It contains all most popular formatting options.__    
+You can choose option just by pressing any key (`b` for bold selected text, `u` for underline, `l` for link)
 
 ## To be implemented:
 ### Extasy
