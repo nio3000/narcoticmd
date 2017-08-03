@@ -15,6 +15,7 @@
   "devDependencies": {
     "coveralls": "^2.13.1",
     "enzyme": "^2.9.1",
+    "eslint-config-xo": "^0.18.2",
     "eslint-config-xo-react": "^0.13.0",
     "react-scripts": "1.0.10",
     "react-test-renderer": "^15.6.1",
@@ -30,7 +31,16 @@
   },
   "homepage": "https://fadehelix.github.io/narcoticmd",
   "xo": {
-	  "extends": "xo-react",
-	  "space": true
+    "extends": [
+      "xo",
+      "xo-react"
+    ],
+    "space": true,
+    "esnext": true,
+    "rules": {
+      "unicorn/filename-case": ["error", {"case": "pascalCase"}],
+      "import/no-unassigned-import": ["error", {"allow": ["**/*.css"]}],
+      "react/forbid-component-props": ["error", { "forbid": ["className", "style"]}]
+    }
   }
 }

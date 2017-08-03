@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { RadioGroup, Radio } from 'react-radio-group';
+import React, {Component} from 'react';
+import {RadioGroup, Radio} from 'react-radio-group';
 import PropTypes from 'prop-types';
 import './Cocaine.css';
-
 
 class Cocaine extends Component {
 
@@ -14,57 +13,54 @@ class Cocaine extends Component {
       key: ''
     };
 
-    this.chooseFormatting = this.chooseFormatting.bind(this);
+    this.chooseFormatting = this.handleChooseFormatting.bind(this);
     this.handleShortcut = this.handleShortcut.bind(this);
-    this.onBlur = this.onBlur.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   /**
    * Choose formatting option
    * @param value ???
    */
-  chooseFormatting(value) {
-    this.setState({ selectedValue: value });
+  handleChooseFormatting(value) {
+    this.setState({selectedValue: value});
   }
 
   handleShortcut(event) {
-    let key = event.target.value.toLocaleLowerCase();
-    //Choose group
-    let choosenPortion = this.props.portion.find((item) => item.key === key);
-    //If key is undefined do nothing
-    if ( choosenPortion && !this.state.choosenPortion ) {
+    const key = event.target.value.toLocaleLowerCase();
+    // Choose group
+    const choosenPortion = this.props.portion.find(item => item.key === key);
+    // If key is undefined do nothing
+    if (choosenPortion && !this.state.choosenPortion) {
       this.setState({
-        choosenPortion: choosenPortion
+        choosenPortion
       });
-      //TODO test
-      //Return format if there is only one option (e.g. blockquote or codeblock)
-      if(choosenPortion.options.length === 1) {
-        this.props.onChooseFormat( choosenPortion.options[0].format );
+      // Return format if there is only one option (e.g. blockquote or codeblock)
+      if (choosenPortion.options.length === 1) {
+        this.props.onChooseFormat(choosenPortion.options[0].format);
         this.setState({
           key
-        })
+        });
       }
-
-    }
-    else if ( this.state.choosenPortion ) {
+    } else if (this.state.choosenPortion) {
       // Choose formatting option
-      let option = this.state.choosenPortion.options.find((item) => item.key === key);
-      if( !option ) {
+      const option = this.state.choosenPortion.options.find(item => item.key === key);
+      if (!option) {
         this.props.onChooseFormat(null);
         return;
       }
-      this.props.onChooseFormat( option.format );
+      this.props.onChooseFormat(option.format);
       this.setState({
         key
-      })
+      });
     }
   }
 
   /**
    * Change Cocaine visible state in parent component
    */
-  onBlur() {
-    //Comment this out for inspection purpose
+  handleBlur() {
+    // Comment this out for inspection purpose
     this.props.onBlur();
   }
 
@@ -74,55 +70,52 @@ class Cocaine extends Component {
 
   render() {
     let options = <label className="cocaine__hidden-option"><Radio/></label>;
-    if(this.state.choosenPortion && this.state.choosenPortion.options) {
-      options = this.state.choosenPortion.options.map(item =>
+    if (this.state.choosenPortion && this.state.choosenPortion.options) {
+      options = this.state.choosenPortion.options.map(item => (
         <label
           key={item.key}
           className="cocaine__label"
         >
           <Radio value={item.key}/><span className="cocaine__keymark">{item.key}</span>{item.name}
-        </label>
+        </label>)
       );
     }
     return (
-      <div className="cocaine" onBlur={this.onBlur} style={{left: this.props.position.left, top: this.props.position.bottom + 75}}>
+      <div className="cocaine" onBlur={this.handleBlur} style={{left: this.props.position.left, top: this.props.position.bottom + 75}}>
         <form>
           <input
             type="text"
             onChange={this.handleShortcut}
-            onKeyDown={this.resetKey}
             className="cocaine__inhaler mousetrap"
             value={this.state.key}
             autoFocus
           />
 
-          {this.props.portion.filter( item => {
+          {this.props.portion.filter(item => {
             if (this.state.choosenPortion) {
               return item.key === this.state.choosenPortion.key;
-            } else {
-              return item;
             }
-          }).map( item => {
+            return item;
+          }).map(item => {
             let keymark = <span className="cocaine__keymark">{item.key}</span>;
-            if(this.state.choosenPortion) {
+            if (this.state.choosenPortion) {
               keymark = null;
             }
-            return(
-               <section className="cocaine__section" key={item.key}>
-                <p className="cocaine__section-header">{keymark} { item.name}
-                </p>
-                {/*<p className="cocaine__section-header"><span className="cocaine__keymark">E</span></p>*/}
+            return (
+              <section key={item.key} className="cocaine__section" >
+                <p className="cocaine__section-header">{keymark} { item.name}</p>
               </section>
-            )
+            );
           })}
           <section className="cocaine__section">
-          <RadioGroup
-            name="headers"
-            selectedValue={this.setState.selectedValue}
-            onChange={this.chooseFormatting}
-            className="cocaine__section-options">
-            {options}
-          </RadioGroup>
+            <RadioGroup
+              name="headers"
+              selectedValue={this.setState.selectedValue}
+              onChange={this.handleChooseFormatting}
+              className="cocaine__section-options"
+            >
+              {options}
+            </RadioGroup>
           </section>
         </form>
       </div>
@@ -130,11 +123,11 @@ class Cocaine extends Component {
   }
 }
 
-//visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} onBlur={this.handleCocaineBlur} position={this.state.cursorPosition
+// Visible={this.state.showCocaine} onChooseFormat={this.handleChooseFormat} portion={portion} onBlur={this.handleCocaineBlur} position={this.state.cursorPosition
 
 Cocaine.defaultProps = {
-  visible: false,
-  position: {left:0, right: 0, top: 0, bottom: 0}
+  onChooseFormat: Function,
+  onBlur: Function
 };
 
 Cocaine.propTypes = {

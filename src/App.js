@@ -1,9 +1,8 @@
-//esversion: 6
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
-import Druggy from "./components/druggy/Druggy";
-import Logo from "./components/logo/Logo";
-import Subtitle from "./components/subtitle/Subtitle";
+import Druggy from './components/druggy/Druggy.jsx';
+import Logo from './components/logo/Logo.jsx';
+import Subtitle from './components/subtitle/Subtitle.jsx';
 
 class App extends Component {
   render() {
@@ -11,7 +10,7 @@ class App extends Component {
       <div className="App">
         <Logo alt="Logo"/>
         <Subtitle value="Keyboard driven markdown editor"/>
-        <Druggy />
+        <Druggy/>
       </div>
     );
   }

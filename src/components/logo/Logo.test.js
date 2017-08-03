@@ -1,16 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Logo from './Logo';
-
 import renderer from 'react-test-renderer';
-
+import Logo from './Logo.jsx';
 
 describe( 'Logo', () => {
   it('renders correctly', () => {
     const component = renderer.create(
       <Logo alt="Logo"/>
     );
-    let tree = component.toJSON();
+    const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
-  })
+  });
 });

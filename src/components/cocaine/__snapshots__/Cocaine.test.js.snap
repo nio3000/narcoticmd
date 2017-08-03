@@ -16,7 +16,6 @@ exports[`Snapshot:  renders correctly on hardcoded position 1`] = `
       autoFocus={true}
       className="cocaine__inhaler mousetrap"
       onChange={[Function]}
-      onKeyDown={undefined}
       type="text"
       value=""
     />
