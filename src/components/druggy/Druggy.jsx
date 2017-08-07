@@ -103,6 +103,13 @@ export class Druggy extends Component {
     this.codemirror = this.editor.simplemde.codemirror;
 
     this.editor.simplemde.element.classList.add('mousetrap');
+
+    this.simplemde.value(
+      '### Text formatting:   \n' +
+      '1. Select any text by keyboard (Shift + Arrows)   \n' +
+      '2. Press **TAB** key   \n' +
+      '3. Press keys displayed in squares.'
+    );
   }
 
   /**
