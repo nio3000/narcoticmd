@@ -232,7 +232,7 @@ export class Druggy extends Component {
               autofocus: true,
               spellChecker: false,
               indentWithTabs: false,
-              toolbar: ["bold", "italic", "|", "heading-1", "heading-2", "heading-3", "|", "unordered-list", "ordered-list", "link", "image", "|", "code", "quote"],
+              toolbar: ["bold", "italic", "|", "heading-1", "heading-2", "heading-3", "|", "unordered-list", "ordered-list", "link", "image", "|", "code", "quote", "|", "preview"],
             }
           }
           extraKeys={this.extraKeys}
