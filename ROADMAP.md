@@ -18,6 +18,9 @@
 ### 0.5.0 - External portion
 * Move cocaine settings out of component to the external JSON
 
+### 0.6.0 - Write good
+* Implement [Write good](https://github.com/btford/write-good#readme) to help improve writer's language quality
+
 ## 1.0.0 - First stable release
 
 #### 1.1.0
