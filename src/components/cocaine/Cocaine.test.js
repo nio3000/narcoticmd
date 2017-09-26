@@ -1,7 +1,10 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import Enzyme, {mount} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-15';
 import renderer from 'react-test-renderer';
 import Cocaine from './Cocaine.jsx';
+
+Enzyme.configure({adapter: new Adapter()});
 
 const portionMock = [
   {
