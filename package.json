@@ -20,7 +20,7 @@
     "jest": "^21.1.0",
     "jest-cli": "^21.1.0",
     "react-scripts": "^1.0.13",
-    "react-test-renderer": "^15.6.2",
+    "react-test-renderer": "^16.0.0",
     "webpack": "^3.5.5",
     "xo": "^0.18.2"
   },
