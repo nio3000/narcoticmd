@@ -4,36 +4,11 @@
 [![Dev dependencies status](https://david-dm.org/fadehelix/narcoticmd/master/dev-status.svg)](https://david-dm.org/fadehelix/narcoticmd/master?type=dev)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 
-> Markdown editor for all md-addcited who want to write text fast. 
-> No mouse, only efficient keyboard shortcuts 
+> Markdown editor for all md-addcited writters who want to write text fast.
+> No mouse, only efficient keyboard shortcuts.
 
 ## Demo
 Play with [Narcotic Mardown Editor demo](https://fadehelix.github.io/narcoticmd).
-
-## Already working components:
-### Druggy
-The Single Source of Truth. Container for SimpleMDE and all other drugs... i mean components.
-
-### Cocaine
-__Popup which appear when text is selected and you hit Tab. It contains all most popular formatting options.__    
-You can choose option just by pressing any key (`b` for bold selected text, `u` for underline, `l` for link)
-
-## To be implemented:
-### Extasy
-__Adnotation for text__ (For examle when I'm writting about emulator and I need to check the infromation, or research more)
-
-### Police
-__Preview output html__
-* Extend preview feature in SimpleMDE
-
-### Joint 
-__Configuration in JSON__
-* Keyboard shortcuts
-* Theme
-
-### Others
-* Double shift opens Cocaine event when no text is selected,
-* Press shift for 2(?) seconds opens Cocaine with alternative options
 
 ## Credits
 Icons:
@@ -44,6 +19,5 @@ Libraries:
  * [Mousetrap](https://craig.is/killing/mice) - awesome pure js library for handling keyboard events.
  * [React](https://facebook.github.io/react/) and [create-react-app](https://github.com/facebookincubator/create-react-app)
 
- 
 ## License
 MIT
